@@ -14,6 +14,9 @@ FROM python:3.12-alpine AS final
 
 WORKDIR /opt/remnashop
 
+# Timezone support (for correct local timestamps in logs when TZ is set)
+RUN apk add --no-cache tzdata
+
 ARG BUILD_TIME
 ARG BUILD_BRANCH
 ARG BUILD_COMMIT

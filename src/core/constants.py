@@ -1,8 +1,10 @@
 import re
-from datetime import timezone
+import os
+from datetime import tzinfo, timezone
 from pathlib import Path
 from re import Pattern
 from typing import Final
+from zoneinfo import ZoneInfo
 
 BASE_DIR: Final[Path] = Path(__file__).resolve().parents[2]
 ASSETS_DIR: Final[Path] = BASE_DIR / "assets"
@@ -21,7 +23,18 @@ PAYMENTS_WEBHOOK_PATH: Final[str] = "/payments"
 REMNAWAVE_WEBHOOK_PATH: Final[str] = "/remnawave"
 REPOSITORY: Final[str] = "https://github.com/snoups/remnashop"
 
-TIMEZONE: Final[timezone] = timezone.utc
+def _load_timezone() -> tuple[str, tzinfo]:
+    tz_name = os.getenv("APP_TIMEZONE") or os.getenv("TZ") or "UTC"
+    try:
+        return tz_name, ZoneInfo(tz_name)
+    except Exception:
+        return "UTC", timezone.utc
+
+
+TIMEZONE_NAME: Final[str]
+TIMEZONE: Final[tzinfo]
+TIMEZONE_NAME, TIMEZONE = _load_timezone()
+
 REMNASHOP_PREFIX: Final[str] = "rs_"
 PURCHASE_PREFIX: Final[str] = "purchase_"
 GOTO_PREFIX: Final[str] = "gt_"

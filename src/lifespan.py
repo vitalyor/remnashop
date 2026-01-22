@@ -1,4 +1,5 @@
 import asyncio
+import os
 import traceback
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator, Optional
@@ -12,6 +13,7 @@ from loguru import logger
 
 from src.__version__ import __version__
 from src.api.endpoints import TelegramWebhookEndpoint
+from src.core.constants import TIMEZONE_NAME
 from src.core.config.app import AppConfig
 from src.core.enums import SystemNotificationType
 from src.core.utils.message_payload import MessagePayload
@@ -80,6 +82,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         <green>Build Time: {config.build.time}</>
         <green>Branch: {config.build.branch} ({config.build.tag})</>
         <green>Commit: {config.build.commit}</>
+        <green>Timezone: {TIMEZONE_NAME} (TZ={os.getenv("TZ") or "unset"})</>
         <cyan>------------------------</>
         Groups Mode  - {states[bot_info.can_join_groups]}
         Privacy Mode - {states[not bot_info.can_read_all_group_messages]}

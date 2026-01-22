@@ -1,3 +1,6 @@
+import os
+import time
+
 import uvicorn
 from dishka.integrations.aiogram import setup_dishka as setup_aiogram_dishka
 from dishka.integrations.fastapi import setup_dishka as setup_fastapi_dishka
@@ -11,6 +14,13 @@ from src.infrastructure.di import create_container
 
 
 def application() -> FastAPI:
+    # Make sure process-local timezone is applied from env (TZ), so log timestamps match.
+    if os.getenv("TZ"):
+        try:
+            time.tzset()
+        except AttributeError:
+            pass
+
     setup_logger()
 
     config = AppConfig.get()
