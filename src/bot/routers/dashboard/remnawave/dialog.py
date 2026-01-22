@@ -1,6 +1,7 @@
 from aiogram_dialog import Dialog, StartMode, Window
-from aiogram_dialog.widgets.kbd import Row, ScrollingGroup, Select, Start, SwitchTo
+from aiogram_dialog.widgets.kbd import Button, Column, Row, Select, Start, SwitchTo
 from aiogram_dialog.widgets.text import Format
+from magic_filter import F
 
 from src.bot.keyboards import main_menu_button
 from src.bot.states import Dashboard, DashboardRemnawave
@@ -17,7 +18,18 @@ from .getters import (
     system_getter,
     users_getter,
 )
-from .handlers import on_host_select, on_inbound_select, on_node_select
+from .handlers import (
+    on_host_select,
+    on_hosts_next,
+    on_hosts_prev,
+    on_inbound_select,
+    on_inbounds_next,
+    on_inbounds_prev,
+    on_node_select,
+    on_nodes_next,
+    on_nodes_prev,
+    on_page_info,
+)
 
 remnawave = Window(
     Banner(BannerName.DASHBOARD),
@@ -78,7 +90,7 @@ users = Window(
 hosts = Window(
     Banner(BannerName.DASHBOARD),
     I18nFormat("msg-remnawave-hosts-list", count=Format("{count}")),
-    ScrollingGroup(
+    Column(
         Select(
             text=Format("{item[label]}"),
             id="host",
@@ -87,10 +99,12 @@ hosts = Window(
             type_factory=int,
             on_click=on_host_select,
         ),
-        id="hosts_scroll",
-        width=1,
-        height=10,
-        hide_on_single_page=True,
+    ),
+    Row(
+        Button(text=Format("<"), id="prev", on_click=on_hosts_prev, when=F["page"] > 1),
+        Button(text=Format("{page}/{pages}"), id="page", on_click=on_page_info),
+        Button(text=Format(">"), id="next", on_click=on_hosts_next, when=F["page"] < F["pages"]),
+        when=F["show_pager"],
     ),
     Row(
         SwitchTo(
@@ -122,7 +136,7 @@ host = Window(
 nodes = Window(
     Banner(BannerName.DASHBOARD),
     I18nFormat("msg-remnawave-nodes-list", count=Format("{count}")),
-    ScrollingGroup(
+    Column(
         Select(
             text=Format("{item[label]}"),
             id="node",
@@ -131,10 +145,12 @@ nodes = Window(
             type_factory=int,
             on_click=on_node_select,
         ),
-        id="nodes_scroll",
-        width=1,
-        height=10,
-        hide_on_single_page=True,
+    ),
+    Row(
+        Button(text=Format("<"), id="prev", on_click=on_nodes_prev, when=F["page"] > 1),
+        Button(text=Format("{page}/{pages}"), id="page", on_click=on_page_info),
+        Button(text=Format(">"), id="next", on_click=on_nodes_next, when=F["page"] < F["pages"]),
+        when=F["show_pager"],
     ),
     Row(
         SwitchTo(
@@ -166,7 +182,7 @@ node = Window(
 inbounds = Window(
     Banner(BannerName.DASHBOARD),
     I18nFormat("msg-remnawave-inbounds-list", count=Format("{count}")),
-    ScrollingGroup(
+    Column(
         Select(
             text=Format("{item[label]}"),
             id="inbound",
@@ -175,10 +191,12 @@ inbounds = Window(
             type_factory=int,
             on_click=on_inbound_select,
         ),
-        id="inbounds_scroll",
-        width=1,
-        height=10,
-        hide_on_single_page=True,
+    ),
+    Row(
+        Button(text=Format("<"), id="prev", on_click=on_inbounds_prev, when=F["page"] > 1),
+        Button(text=Format("{page}/{pages}"), id="page", on_click=on_page_info),
+        Button(text=Format(">"), id="next", on_click=on_inbounds_next, when=F["page"] < F["pages"]),
+        when=F["show_pager"],
     ),
     Row(
         SwitchTo(

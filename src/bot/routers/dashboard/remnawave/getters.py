@@ -1,3 +1,4 @@
+from math import ceil
 from typing import Any
 
 from aiogram_dialog import DialogManager
@@ -13,6 +14,25 @@ from src.core.utils.formatters import (
     i18n_format_bytes_to_unit,
     i18n_format_seconds,
 )
+
+PAGE_SIZE = 10
+
+
+def _get_page(dialog_manager: DialogManager, key: str) -> int:
+    page = dialog_manager.dialog_data.get(key, 1)
+    try:
+        page_int = int(page)
+    except (TypeError, ValueError):
+        page_int = 1
+    return max(1, page_int)
+
+
+def _paginate(items: list[dict[str, Any]], page: int) -> tuple[list[dict[str, Any]], int, int]:
+    total_pages = max(1, ceil(len(items) / PAGE_SIZE))
+    page = max(1, min(page, total_pages))
+    start = (page - 1) * PAGE_SIZE
+    end = start + PAGE_SIZE
+    return items[start:end], page, total_pages
 
 
 @inject
@@ -90,9 +110,15 @@ async def hosts_getter(
 
     dialog_manager.dialog_data["hosts_details"] = hosts_details
 
+    page = _get_page(dialog_manager, "page_hosts")
+    paged, page, pages = _paginate(hosts_list, page)
+
     return {
         "count": len(hosts_list),
-        "hosts": hosts_list,
+        "hosts": paged,
+        "page": page,
+        "pages": pages,
+        "show_pager": len(hosts_list) > PAGE_SIZE,
     }
 
 
@@ -163,9 +189,15 @@ async def nodes_getter(
 
     dialog_manager.dialog_data["nodes_details"] = nodes_details
 
+    page = _get_page(dialog_manager, "page_nodes")
+    paged, page, pages = _paginate(nodes_list, page)
+
     return {
         "count": len(nodes_list),
-        "nodes": nodes_list,
+        "nodes": paged,
+        "page": page,
+        "pages": pages,
+        "show_pager": len(nodes_list) > PAGE_SIZE,
     }
 
 @inject
@@ -224,9 +256,15 @@ async def inbounds_getter(
 
     dialog_manager.dialog_data["inbounds_details"] = inbounds_details
 
+    page = _get_page(dialog_manager, "page_inbounds")
+    paged, page, pages = _paginate(inbounds_list, page)
+
     return {
         "count": len(inbounds_list),
-        "inbounds": inbounds_list,
+        "inbounds": paged,
+        "page": page,
+        "pages": pages,
+        "show_pager": len(inbounds_list) > PAGE_SIZE,
     }
 
 @inject
