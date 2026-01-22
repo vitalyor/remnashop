@@ -796,6 +796,7 @@ msg-plan-configurator =
     <b>📦 Конфигуратор плана</b>
 
     <blockquote>
+    • <b>ID</b>: { $plan_id }
     • <b>Название</b>: { $name }
     • <b>Тип</b>: { plan-type }
     • <b>Доступ</b>: { availability-type }

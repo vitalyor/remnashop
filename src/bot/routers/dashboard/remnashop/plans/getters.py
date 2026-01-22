@@ -79,6 +79,7 @@ async def configurator_getter(dialog_manager: DialogManager, **kwargs: Any) -> d
 
     helpers = {
         "is_edit": dialog_manager.dialog_data.get("is_edit", False),
+        "plan_id": plan.id if plan.id is not None else "—",
         "is_unlimited_traffic": plan.is_unlimited_traffic,
         "is_unlimited_devices": plan.is_unlimited_devices,
         "plan_type": plan.type,
