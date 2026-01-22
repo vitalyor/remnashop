@@ -13,7 +13,7 @@ from .base import BasePaymentGateway
 
 
 class TelegramStarsGateway(BasePaymentGateway):
-    async def handle_create_payment(self, amount: Decimal, details: str) -> PaymentResult:
+    async def handle_create_payment(self, user, amount: Decimal, details: str) -> PaymentResult:
         prices = [LabeledPrice(label=self.data.currency, amount=int(amount))]
         payment_id = uuid.uuid4()
 

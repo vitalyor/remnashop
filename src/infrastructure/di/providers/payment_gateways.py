@@ -15,9 +15,14 @@ from src.infrastructure.payment_gateways import (
     HeleketGateway,
     PaymentGatewayFactory,
     TelegramStarsGateway,
+    TributeGateway,
     YookassaGateway,
     YoomoneyGateway,
 )
+from src.services.plan import PlanService
+from src.services.subscription import SubscriptionService
+from src.services.transaction import TransactionService
+from src.services.user import UserService
 
 GATEWAY_MAP: dict[PaymentGatewayType, Type[BasePaymentGateway]] = {
     PaymentGatewayType.TELEGRAM_STARS: TelegramStarsGateway,
@@ -25,6 +30,7 @@ GATEWAY_MAP: dict[PaymentGatewayType, Type[BasePaymentGateway]] = {
     PaymentGatewayType.YOOMONEY: YoomoneyGateway,
     PaymentGatewayType.CRYPTOMUS: CryptomusGateway,
     PaymentGatewayType.HELEKET: HeleketGateway,
+    PaymentGatewayType.TRIBUTE: TributeGateway,
     # PaymentGatewayType.URLPAY: UrlpayGateway,
 }
 
@@ -34,7 +40,15 @@ class PaymentGatewaysProvider(Provider):
     _cached_gateways: dict[PaymentGatewayType, BasePaymentGateway] = {}
 
     @provide()
-    def get_gateway_factory(self, bot: Bot, config: AppConfig) -> PaymentGatewayFactory:
+    def get_gateway_factory(
+        self,
+        bot: Bot,
+        config: AppConfig,
+        transaction_service: TransactionService,
+        user_service: UserService,
+        plan_service: PlanService,
+        subscription_service: SubscriptionService,
+    ) -> PaymentGatewayFactory:
         def create_gateway(gateway: PaymentGatewayDto) -> BasePaymentGateway:
             gateway_type = gateway.type
 
@@ -54,7 +68,13 @@ class PaymentGatewaysProvider(Provider):
                     raise ValueError(f"Unknown gateway type '{gateway_type}'")
 
                 self._cached_gateways[gateway_type] = gateway_instance(
-                    gateway=gateway, bot=bot, config=config
+                    gateway=gateway,
+                    bot=bot,
+                    config=config,
+                    transaction_service=transaction_service,
+                    user_service=user_service,
+                    plan_service=plan_service,
+                    subscription_service=subscription_service,
                 )
                 logger.debug(f"Initialized new gateway '{gateway_type}' instance")
 

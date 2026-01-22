@@ -2,6 +2,7 @@ from .base import BasePaymentGateway, PaymentGatewayFactory
 from .cryptomus import CryptomusGateway
 from .heleket import HeleketGateway
 from .telegram_stars import TelegramStarsGateway
+from .tribute import TributeGateway
 from .yookassa import YookassaGateway
 from .yoomoney import YoomoneyGateway
 
@@ -13,4 +14,5 @@ __all__ = [
     "YoomoneyGateway",
     "CryptomusGateway",
     "HeleketGateway",
+    "TributeGateway",
 ]

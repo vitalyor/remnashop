@@ -2,6 +2,8 @@ from typing import Annotated, Any, Literal, Optional, Union
 from uuid import UUID
 
 from pydantic import ConfigDict, Field, SecretStr
+from pydantic import field_validator
+import orjson
 
 from src.core.enums import Currency, PaymentGatewayType, YookassaVatCode
 
@@ -90,6 +92,49 @@ class RobokassaGatewaySettingsDto(GatewaySettingsDto):
     secret_key: Optional[SecretStr] = None
 
 
+class TributeGatewaySettingsDto(GatewaySettingsDto):
+    type: Literal[PaymentGatewayType.TRIBUTE] = PaymentGatewayType.TRIBUTE
+    api_key: Optional[SecretStr] = None
+    donate_link: Optional[SecretStr] = None
+    subscription_link: Optional[SecretStr] = None
+    plan_id: Optional[int] = None
+    period_map_json: Optional[str] = None
+
+    @property
+    def is_configure(self) -> bool:
+        if not self.api_key:
+            return False
+        if self.plan_id is None:
+            return False
+        if not (self.subscription_link or self.donate_link):
+            return False
+        # For subscriptions we must know how to map Tribute periods -> bot durations.
+        if self.subscription_link and not self.period_map_json:
+            return False
+        return True
+
+    @field_validator("period_map_json")
+    @classmethod
+    def validate_period_map_json(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return None
+        try:
+            loaded = orjson.loads(v.encode("utf-8"))
+        except Exception as exc:
+            raise ValueError("period_map_json must be a valid JSON object") from exc
+        if not isinstance(loaded, dict):
+            raise ValueError("period_map_json must be a JSON object")
+        # values should be ints (days)
+        for key, value in loaded.items():
+            try:
+                int(value)
+            except Exception as exc:
+                raise ValueError(
+                    f"period_map_json['{key}'] must be an integer number of days"
+                ) from exc
+        return v
+
+
 AnyGatewaySettingsDto = Annotated[
     Union[
         YookassaGatewaySettingsDto,
@@ -98,6 +143,7 @@ AnyGatewaySettingsDto = Annotated[
         HeleketGatewaySettingsDto,
         CryptopayGatewaySettingsDto,
         RobokassaGatewaySettingsDto,
+        TributeGatewaySettingsDto,
     ],
     Field(discriminator="type"),
 ]

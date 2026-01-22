@@ -29,8 +29,25 @@ class YoomoneyGateway(BasePaymentGateway):
     PAY_FORM: Final[str] = "button"
     PAY_TYPE: Final[str] = "AC"
 
-    def __init__(self, gateway: PaymentGatewayDto, bot: Bot, config: AppConfig) -> None:
-        super().__init__(gateway, bot, config)
+    def __init__(
+        self,
+        gateway: PaymentGatewayDto,
+        bot: Bot,
+        config: AppConfig,
+        transaction_service=None,
+        user_service=None,
+        plan_service=None,
+        subscription_service=None,
+    ) -> None:
+        super().__init__(
+            gateway,
+            bot,
+            config,
+            transaction_service=transaction_service,
+            user_service=user_service,
+            plan_service=plan_service,
+            subscription_service=subscription_service,
+        )
 
         if not isinstance(self.data.settings, YoomoneyGatewaySettingsDto):
             raise TypeError(
@@ -40,7 +57,7 @@ class YoomoneyGateway(BasePaymentGateway):
 
         self._client = self._make_client(base_url=self.API_BASE)
 
-    async def handle_create_payment(self, amount: Decimal, details: str) -> PaymentResult:
+    async def handle_create_payment(self, user, amount: Decimal, details: str) -> PaymentResult:
         payment_id = uuid.uuid4()
         payload = await self._create_payment_payload(str(amount), str(payment_id))
 

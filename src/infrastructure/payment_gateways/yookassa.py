@@ -40,8 +40,25 @@ class YookassaGateway(BasePaymentGateway):
         "2a02:5180:0:2669::/64",
     ]
 
-    def __init__(self, gateway: PaymentGatewayDto, bot: Bot, config: AppConfig) -> None:
-        super().__init__(gateway, bot, config)
+    def __init__(
+        self,
+        gateway: PaymentGatewayDto,
+        bot: Bot,
+        config: AppConfig,
+        transaction_service=None,
+        user_service=None,
+        plan_service=None,
+        subscription_service=None,
+    ) -> None:
+        super().__init__(
+            gateway,
+            bot,
+            config,
+            transaction_service=transaction_service,
+            user_service=user_service,
+            plan_service=plan_service,
+            subscription_service=subscription_service,
+        )
 
         if not isinstance(self.data.settings, YookassaGatewaySettingsDto):
             raise TypeError(
@@ -57,7 +74,7 @@ class YookassaGateway(BasePaymentGateway):
             ),
         )
 
-    async def handle_create_payment(self, amount: Decimal, details: str) -> PaymentResult:
+    async def handle_create_payment(self, user, amount: Decimal, details: str) -> PaymentResult:
         payload = await self._create_payment_payload(str(amount), details)
         headers = {"Idempotence-Key": str(uuid.uuid4())}
 

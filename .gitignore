@@ -31,3 +31,6 @@ dist/
 site/
 *.egg-info/
 *.egg
+
+remnawave-bedolaga-telegram-bot
+docs

@@ -4,9 +4,10 @@ from aiogram_dialog import DialogManager
 from dishka import FromDishka
 from dishka.integrations.aiogram_dialog import inject
 from fluentogram import TranslatorRunner
+import orjson
 
 from src.core.config import AppConfig
-from src.core.enums import PurchaseType
+from src.core.enums import PaymentGatewayType, PurchaseType
 from src.core.utils.adapter import DialogDataAdapter
 from src.core.utils.formatters import (
     i18n_format_days,
@@ -14,11 +15,29 @@ from src.core.utils.formatters import (
     i18n_format_expire_time,
     i18n_format_traffic_limit,
 )
-from src.infrastructure.database.models.dto import PlanDto, PriceDetailsDto, UserDto
+from src.infrastructure.database.models.dto import (
+    PlanDto,
+    PriceDetailsDto,
+    TributeGatewaySettingsDto,
+    UserDto,
+)
 from src.services.payment_gateway import PaymentGatewayService
 from src.services.plan import PlanService
 from src.services.pricing import PricingService
 from src.services.settings import SettingsService
+
+
+def _tribute_supported_days(period_map_json: str) -> set[int]:
+    loaded = orjson.loads(period_map_json.encode("utf-8"))
+    if not isinstance(loaded, dict):
+        raise ValueError("TRIBUTE period_map_json must be a JSON object")
+    days: set[int] = set()
+    for v in loaded.values():
+        try:
+            days.add(int(v))
+        except Exception:
+            continue
+    return days
 
 
 @inject
@@ -128,6 +147,24 @@ async def payment_method_getter(
 
     payment_methods = []
     for gateway in gateways:
+        if gateway.type == PaymentGatewayType.TRIBUTE:
+            settings = gateway.settings
+            if not isinstance(settings, TributeGatewaySettingsDto) or settings.plan_id is None:
+                continue
+
+            # Safety: TRIBUTE is bound to a single plan configured in settings.
+            if settings.plan_id != plan.id:
+                continue
+
+            # Optional safety: show TRIBUTE only for durations present in mapping (if provided).
+            if settings.period_map_json:
+                try:
+                    supported = _tribute_supported_days(settings.period_map_json)
+                except Exception:
+                    continue
+                if supported and duration.days not in supported:
+                    continue
+
         payment_methods.append(
             {
                 "gateway_type": gateway.type,

@@ -37,6 +37,7 @@ from src.infrastructure.database.models.dto import (
     UserDto,
     YookassaGatewaySettingsDto,
     YoomoneyGatewaySettingsDto,
+    TributeGatewaySettingsDto,
 )
 from src.infrastructure.database.models.sql import PaymentGateway
 from src.infrastructure.payment_gateways import BasePaymentGateway, PaymentGatewayFactory
@@ -103,6 +104,9 @@ class PaymentGatewayService(BaseService):
                 case PaymentGatewayType.HELEKET:
                     is_active = False
                     settings = HeleketGatewaySettingsDto()
+                case PaymentGatewayType.TRIBUTE:
+                    is_active = False
+                    settings = TributeGatewaySettingsDto()
                 # case PaymentGatewayType.CRYPTOPAY:
                 #     is_active = False
                 #     settings = CryptopayGatewaySettingsDto()
@@ -187,7 +191,9 @@ class PaymentGatewayService(BaseService):
             db_gateways = await self.uow.repository.gateways.filter_active(is_active)
 
         logger.debug(f"Filtered active gateways: '{is_active}', found '{len(db_gateways)}'")
-        return PaymentGatewayDto.from_model_list(db_gateways, decrypt=False)
+        # We return decrypted settings because some gateways (e.g. TRIBUTE) need non-secret
+        # config (like plan_id / period_map_json) during the purchase flow to safely filter.
+        return PaymentGatewayDto.from_model_list(db_gateways, decrypt=True)
 
     async def move_gateway_up(self, gateway_id: int) -> bool:
         async with self.uow:
@@ -258,6 +264,7 @@ class PaymentGatewayService(BaseService):
             return PaymentResult(id=payment_id, url=None)
 
         payment: PaymentResult = await gateway_instance.handle_create_payment(
+            user=user,
             amount=pricing.final_amount,
             details=details,
         )
@@ -281,6 +288,7 @@ class PaymentGatewayService(BaseService):
         test_plan = PlanSnapshotDto.test()
 
         test_payment: PaymentResult = await gateway_instance.handle_create_payment(
+            user=user,
             amount=test_pricing.final_amount,
             details=test_details,
         )
@@ -396,7 +404,7 @@ class PaymentGatewayService(BaseService):
         transaction = await self.transaction_service.get(payment_id)
 
         if not transaction or not transaction.user:
-            logger.critical(f"Transaction or user not found for '{payment_id}'")
+            logger.warning(f"Transaction or user not found for '{payment_id}' (canceled)")
             return
 
         transaction.status = TransactionStatus.CANCELED

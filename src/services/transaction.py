@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import Optional
 from uuid import UUID
 
@@ -7,7 +8,7 @@ from loguru import logger
 from redis.asyncio import Redis
 
 from src.core.config import AppConfig
-from src.core.enums import TransactionStatus
+from src.core.enums import PaymentGatewayType, TransactionStatus
 from src.infrastructure.database import UnitOfWork
 from src.infrastructure.database.models.dto import TransactionDto, UserDto
 from src.infrastructure.database.models.sql import Transaction
@@ -76,6 +77,35 @@ class TransactionService(BaseService):
 
         logger.debug(f"Retrieved '{len(db_transactions)}' transactions with status '{status}'")
         return TransactionDto.from_model_list(db_transactions)
+
+    async def find_recent_pending_by_user_gateway_amount(
+        self,
+        telegram_user_id: int,
+        gateway_type: PaymentGatewayType,
+        amount_kopeks: Optional[int],
+        limit: int = 10,
+    ) -> Optional[TransactionDto]:
+        async with self.uow:
+            db_transactions = await self.uow.repository.transactions.get_recent_pending_by_user_gateway(
+                telegram_id=telegram_user_id,
+                gateway_type=gateway_type,
+                limit=limit,
+            )
+
+        transactions = TransactionDto.from_model_list(db_transactions)
+
+        if amount_kopeks is None:
+            return transactions[0] if transactions else None
+
+        for tx in transactions:
+            try:
+                expected = int((Decimal(tx.pricing.final_amount) * 100).to_integral_value())
+            except Exception:
+                continue
+            if expected == amount_kopeks:
+                return tx
+
+        return transactions[0] if transactions else None
 
     async def update(self, transaction: TransactionDto) -> Optional[TransactionDto]:
         async with self.uow:

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from decimal import Decimal
 from ipaddress import ip_address, ip_network
-from typing import Optional, Protocol
+from typing import TYPE_CHECKING, Optional, Protocol
 from uuid import UUID
 
 import orjson
@@ -16,6 +16,13 @@ from src.core.constants import T_ME
 from src.core.enums import TransactionStatus
 from src.infrastructure.database.models.dto import PaymentGatewayDto, PaymentResult
 
+if TYPE_CHECKING:
+    from src.infrastructure.database.models.dto import UserDto
+    from src.services.plan import PlanService
+    from src.services.subscription import SubscriptionService
+    from src.services.transaction import TransactionService
+    from src.services.user import UserService
+
 
 class PaymentGatewayFactory(Protocol):
     def __call__(self, gateway: "PaymentGatewayDto") -> "BasePaymentGateway": ...
@@ -24,21 +31,43 @@ class PaymentGatewayFactory(Protocol):
 class BasePaymentGateway(ABC):
     data: PaymentGatewayDto
     bot: Bot
+    transaction_service: Optional["TransactionService"]
+    user_service: Optional["UserService"]
+    plan_service: Optional["PlanService"]
+    subscription_service: Optional["SubscriptionService"]
 
     _bot_username: Optional[str]
 
     NETWORKS: list[str] = []
 
-    def __init__(self, gateway: PaymentGatewayDto, bot: Bot, config: AppConfig) -> None:
+    def __init__(
+        self,
+        gateway: PaymentGatewayDto,
+        bot: Bot,
+        config: AppConfig,
+        transaction_service: Optional["TransactionService"] = None,
+        user_service: Optional["UserService"] = None,
+        plan_service: Optional["PlanService"] = None,
+        subscription_service: Optional["SubscriptionService"] = None,
+    ) -> None:
         self.data = gateway
         self.bot = bot
         self.config = config
+        self.transaction_service = transaction_service
+        self.user_service = user_service
+        self.plan_service = plan_service
+        self.subscription_service = subscription_service
         self._bot_username: Optional[str] = None
 
         logger.debug(f"{self.__class__.__name__} Initialized")
 
     @abstractmethod
-    async def handle_create_payment(self, amount: Decimal, details: str) -> PaymentResult: ...
+    async def handle_create_payment(
+        self,
+        user: "UserDto",
+        amount: Decimal,
+        details: str,
+    ) -> PaymentResult: ...
 
     @abstractmethod
     async def handle_webhook(self, request: Request) -> tuple[UUID, TransactionStatus]: ...

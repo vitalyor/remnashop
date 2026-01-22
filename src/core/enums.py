@@ -224,6 +224,7 @@ class PaymentGatewayType(UpperStrEnum):
     HELEKET = auto()
     CRYPTOPAY = auto()
     ROBOKASSA = auto()
+    TRIBUTE = auto()
 
 
 class Currency(UpperStrEnum):
@@ -251,6 +252,7 @@ class Currency(UpperStrEnum):
             PaymentGatewayType.YOOKASSA: cls.RUB,
             PaymentGatewayType.YOOMONEY: cls.RUB,
             PaymentGatewayType.ROBOKASSA: cls.RUB,
+            PaymentGatewayType.TRIBUTE: cls.RUB,
             PaymentGatewayType.CRYPTOMUS: cls.USD,
             PaymentGatewayType.HELEKET: cls.USD,
             PaymentGatewayType.CRYPTOPAY: cls.USD,

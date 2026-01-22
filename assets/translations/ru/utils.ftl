@@ -271,6 +271,7 @@ gateway-type = { $gateway_type ->
     [YOOMONEY] ЮMoney
     [CRYPTOMUS] Cryptomus
     [HELEKET] Heleket
+    [TRIBUTE] Tribute
     [URLPAY] UrlPay
     *[OTHER] { $gateway_type }
 }

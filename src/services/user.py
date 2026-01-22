@@ -92,6 +92,37 @@ class UserService(BaseService):
         logger.info(f"Created new user '{user.telegram_id}' from panel")
         return UserDto.from_model(db_created_user)  # type: ignore[return-value]
 
+    async def get_or_create_stub(
+        self,
+        telegram_id: int,
+        *,
+        username: Optional[str] = None,
+        name: Optional[str] = None,
+    ) -> UserDto:
+        existing = await self.get(telegram_id=telegram_id)
+        if existing:
+            return existing
+
+        user = UserDto(
+            telegram_id=telegram_id,
+            username=username,
+            referral_code=generate_referral_code(
+                telegram_id,
+                secret=self.config.crypt_key.get_secret_value(),
+            ),
+            name=name or str(telegram_id),
+            role=UserRole.USER,
+            language=self.config.default_locale,
+        )
+        db_user = User(**user.model_dump())
+
+        async with self.uow:
+            db_created_user = await self.uow.repository.users.create(db_user)
+
+        await self.clear_user_cache(telegram_id)
+        logger.info(f"Created stub user '{telegram_id}'")
+        return UserDto.from_model(db_created_user)  # type: ignore[return-value]
+
     @redis_cache(prefix="get_user", ttl=TIME_5M)
     async def get(self, telegram_id: int) -> Optional[UserDto]:
         async with self.uow:

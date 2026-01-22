@@ -1,7 +1,9 @@
 from typing import Any, Optional
 from uuid import UUID
 
-from src.core.enums import TransactionStatus
+from sqlalchemy import desc
+
+from src.core.enums import PaymentGatewayType, TransactionStatus
 from src.infrastructure.database.models.sql import Transaction
 
 from .base import BaseRepository
@@ -22,6 +24,21 @@ class TransactionRepository(BaseRepository):
 
     async def get_by_status(self, status: TransactionStatus) -> list[Transaction]:
         return await self._get_many(Transaction, Transaction.status == status)
+
+    async def get_recent_pending_by_user_gateway(
+        self,
+        telegram_id: int,
+        gateway_type: PaymentGatewayType,
+        limit: int = 10,
+    ) -> list[Transaction]:
+        return await self._get_many(
+            Transaction,
+            Transaction.user_telegram_id == telegram_id,
+            Transaction.gateway_type == gateway_type,
+            Transaction.status == TransactionStatus.PENDING,
+            order_by=desc(Transaction.id),
+            limit=limit,
+        )
 
     async def update(self, payment_id: UUID, **data: Any) -> Optional[Transaction]:
         return await self._update(Transaction, Transaction.payment_id == payment_id, **data)
