@@ -87,6 +87,18 @@ async def hosts_getter(
             )
         )
 
+    if hosts:
+        current_page = min(current_page, len(hosts) - 1)
+
+    if len(hosts) <= 10:
+        current_page = 0
+        hosts_view = "\n\n".join(hosts) if hosts else i18n.get("empty")
+        return {
+            "pages": 1,
+            "current_page": 1,
+            "host": hosts_view,
+        }
+
     return {
         "pages": len(hosts),
         "current_page": current_page + 1,
@@ -136,6 +148,18 @@ async def nodes_getter(
             )
         )
 
+    if nodes:
+        current_page = min(current_page, len(nodes) - 1)
+
+    if len(nodes) <= 10:
+        current_page = 0
+        nodes_view = "\n\n".join(nodes) if nodes else i18n.get("empty")
+        return {
+            "pages": 1,
+            "current_page": 1,
+            "node": nodes_view,
+        }
+
     return {
         "pages": len(nodes),
         "current_page": current_page + 1,
@@ -171,6 +195,18 @@ async def inbounds_getter(
                 security=inbound.security or False,
             )
         )
+
+    if inbounds:
+        current_page = min(current_page, len(inbounds) - 1)
+
+    if len(inbounds) <= 10:
+        current_page = 0
+        inbounds_view = "\n\n".join(inbounds) if inbounds else i18n.get("empty")
+        return {
+            "pages": 1,
+            "current_page": 1,
+            "inbound": inbounds_view,
+        }
 
     return {
         "pages": len(inbounds),

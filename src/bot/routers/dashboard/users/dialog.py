@@ -83,7 +83,7 @@ all_users = Window(
         ),
         id="scroll",
         width=1,
-        height=7,
+        height=10,
         hide_on_single_page=True,
     ),
     Row(
@@ -127,7 +127,7 @@ recent_registered = Window(
         ),
         id="scroll",
         width=1,
-        height=7,
+        height=10,
         hide_on_single_page=True,
     ),
     Row(
@@ -156,7 +156,7 @@ recent_activity = Window(
         ),
         id="scroll",
         width=1,
-        height=7,
+        height=10,
         hide_on_single_page=True,
     ),
     Row(
@@ -185,7 +185,7 @@ search_results = Window(
         ),
         id="scroll",
         width=1,
-        height=7,
+        height=10,
         hide_on_single_page=True,
     ),
     Row(
@@ -215,7 +215,7 @@ blacklist = Window(
         ),
         id="scroll",
         width=1,
-        height=7,
+        height=10,
         hide_on_single_page=True,
     ),
     Row(

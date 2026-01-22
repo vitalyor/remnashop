@@ -1,5 +1,6 @@
 from aiogram_dialog import Dialog, StartMode, Window
 from aiogram_dialog.widgets.kbd import NumberedPager, Row, Start, StubScroll, SwitchTo
+from magic_filter import F
 
 from src.bot.keyboards import main_menu_button
 from src.bot.states import Dashboard, DashboardRemnawave
@@ -74,7 +75,7 @@ hosts = Window(
     Banner(BannerName.DASHBOARD),
     I18nFormat("msg-remnawave-hosts"),
     StubScroll(id="scroll_hosts", pages="pages"),
-    NumberedPager(scroll="scroll_hosts"),
+    NumberedPager(scroll="scroll_hosts", when=F["pages"] > 1),
     Row(
         SwitchTo(
             text=I18nFormat("btn-back"),
@@ -92,7 +93,7 @@ nodes = Window(
     Banner(BannerName.DASHBOARD),
     I18nFormat("msg-remnawave-nodes"),
     StubScroll(id="scroll_nodes", pages="pages"),
-    NumberedPager(scroll="scroll_nodes"),
+    NumberedPager(scroll="scroll_nodes", when=F["pages"] > 1),
     Row(
         SwitchTo(
             text=I18nFormat("btn-back"),
@@ -110,7 +111,7 @@ inbounds = Window(
     Banner(BannerName.DASHBOARD),
     I18nFormat("msg-remnawave-inbounds"),
     StubScroll(id="scroll_inbounds", pages="pages"),
-    NumberedPager(scroll="scroll_inbounds"),
+    NumberedPager(scroll="scroll_inbounds", when=F["pages"] > 1),
     Row(
         SwitchTo(
             text=I18nFormat("btn-back"),

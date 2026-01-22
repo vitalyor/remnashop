@@ -110,7 +110,7 @@ list = Window(
         ),
         id="scroll",
         width=1,
-        height=7,
+        height=10,
         hide_on_single_page=True,
     ),
     Row(
