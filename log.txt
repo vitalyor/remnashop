@@ -1,0 +1,496 @@
+remnashop-taskiq-scheduler  | 2026-01-22 15:32:59.787 | INFO     | taskiq.cli.utils:66 | Importing tasks from module src.infrastructure.taskiq.tasks
+remnashop                   | INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+remnashop                   | INFO  [alembic.runtime.migration] Will assume transactional DDL.
+remnashop                   | INFO  [alembic.runtime.migration] Running upgrade 0017 -> 0018
+remnashop-taskiq-scheduler  | 2026-01-22 15:33:06.094 | WARNING  | taskiq.cli.utils:70 | Cannot import src.infrastructure.taskiq.tasks. Cause:
+remnashop-taskiq-scheduler  | 2026-01-22 15:33:06.094 | ERROR    | taskiq.cli.utils:71 | cannot import name 'TributeGatewaySettingsDto' from 'src.infrastructure.database.models.dto' (/opt/remnashop/src/infrastructure/database/models/dto/__init__.py)
+remnashop-taskiq-scheduler  | Traceback (most recent call last):
+remnashop-taskiq-scheduler  | 
+remnashop-taskiq-scheduler  |   File "/opt/remnashop/.venv/bin/taskiq", line 10, in <module>
+remnashop-taskiq-scheduler  |     sys.exit(main())
+remnashop-taskiq-scheduler  |     │   │    └ <function main at 0x72de7f861120>
+remnashop-taskiq-scheduler  |     │   └ <built-in function exit>
+remnashop-taskiq-scheduler  |     └ <module 'sys' (built-in)>
+remnashop-taskiq-scheduler  |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/__main__.py", line 71, in main
+remnashop-taskiq-scheduler  |     status = command.exec(sys.argv[1:])
+remnashop-taskiq-scheduler  |              │       │    │   └ ['scheduler', 'src.infrastructure.taskiq.scheduler:scheduler', '--tasks-pattern', 'src/infrastructure/taskiq/tasks', '-fsd']
+remnashop-taskiq-scheduler  |              │       │    └ <module 'sys' (built-in)>
+remnashop-taskiq-scheduler  |              │       └ <function SchedulerCMD.exec at 0x72de7f2e04a0>
+remnashop-taskiq-scheduler  |              └ <taskiq.cli.scheduler.cmd.SchedulerCMD object at 0x72de7f755460>
+remnashop-taskiq-scheduler  |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/cli/scheduler/cmd.py", line 26, in exec
+remnashop-taskiq-scheduler  |     asyncio.run(run_scheduler(parsed))
+remnashop-taskiq-scheduler  |     │       │   │             └ SchedulerArgs(scheduler='src.infrastructure.taskiq.scheduler:scheduler', modules=['src.infrastructure.taskiq.tasks'], app_dir...
+remnashop-taskiq-scheduler  |     │       │   └ <function run_scheduler at 0x72de7f2b1120>
+remnashop-taskiq-scheduler  |     │       └ <function run at 0x72de81c59080>
+remnashop-taskiq-scheduler  |     └ <module 'asyncio' from '/usr/local/lib/python3.12/asyncio/__init__.py'>
+remnashop-taskiq-scheduler  |   File "/usr/local/lib/python3.12/asyncio/runners.py", line 195, in run
+remnashop-taskiq-scheduler  |     return runner.run(main)
+remnashop-taskiq-scheduler  |            │      │   └ <coroutine object run_scheduler at 0x72de7ee17040>
+remnashop-taskiq-scheduler  |            │      └ <function Runner.run at 0x72de81c34360>
+remnashop-taskiq-scheduler  |            └ <asyncio.runners.Runner object at 0x72de7f8b0950>
+remnashop-taskiq-scheduler  |   File "/usr/local/lib/python3.12/asyncio/runners.py", line 118, in run
+remnashop-taskiq-scheduler  |     return self._loop.run_until_complete(task)
+remnashop-taskiq-scheduler  |            │    │     │                  └ <Task pending name='Task-1' coro=<run_scheduler() running at /opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/cli/sch...
+remnashop-taskiq-scheduler  |            │    │     └ <function BaseEventLoop.run_until_complete at 0x72de81c65f80>
+remnashop-taskiq-scheduler  |            │    └ <_UnixSelectorEventLoop running=True closed=False debug=False>
+remnashop-taskiq-scheduler  |            └ <asyncio.runners.Runner object at 0x72de7f8b0950>
+remnashop-taskiq-scheduler  |   File "/usr/local/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+remnashop-taskiq-scheduler  |     self.run_forever()
+remnashop-taskiq-scheduler  |     │    └ <function BaseEventLoop.run_forever at 0x72de81c65ee0>
+remnashop-taskiq-scheduler  |     └ <_UnixSelectorEventLoop running=True closed=False debug=False>
+remnashop-taskiq-scheduler  |   File "/usr/local/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+remnashop-taskiq-scheduler  |     self._run_once()
+remnashop-taskiq-scheduler  |     │    └ <function BaseEventLoop._run_once at 0x72de81c67ce0>
+remnashop-taskiq-scheduler  |     └ <_UnixSelectorEventLoop running=True closed=False debug=False>
+remnashop-taskiq-scheduler  |   File "/usr/local/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+remnashop-taskiq-scheduler  |     handle._run()
+remnashop-taskiq-scheduler  |     │      └ <function Handle._run at 0x72de81cffec0>
+remnashop-taskiq-scheduler  |     └ <Handle <_asyncio.TaskStepMethWrapper object at 0x72de81e25f30>()>
+remnashop-taskiq-scheduler  |   File "/usr/local/lib/python3.12/asyncio/events.py", line 88, in _run
+remnashop-taskiq-scheduler  |     self._context.run(self._callback, *self._args)
+remnashop-taskiq-scheduler  |     │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+remnashop-taskiq-scheduler  |     │    │            │    │           └ <Handle <_asyncio.TaskStepMethWrapper object at 0x72de81e25f30>()>
+remnashop-taskiq-scheduler  |     │    │            │    └ <member '_callback' of 'Handle' objects>
+remnashop-taskiq-scheduler  |     │    │            └ <Handle <_asyncio.TaskStepMethWrapper object at 0x72de81e25f30>()>
+remnashop-taskiq-scheduler  |     │    └ <member '_context' of 'Handle' objects>
+remnashop-taskiq-scheduler  |     └ <Handle <_asyncio.TaskStepMethWrapper object at 0x72de81e25f30>()>
+remnashop-taskiq-scheduler  |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/cli/scheduler/run.py", line 392, in run_scheduler
+remnashop-taskiq-scheduler  |     import_tasks(args.modules, args.tasks_pattern, args.fs_discover)
+remnashop-taskiq-scheduler  |     │            │    │        │    │              │    └ True
+remnashop-taskiq-scheduler  |     │            │    │        │    │              └ SchedulerArgs(scheduler='src.infrastructure.taskiq.scheduler:scheduler', modules=['src.infrastructure.taskiq.tasks'], app_dir...
+remnashop-taskiq-scheduler  |     │            │    │        │    └ ['src/infrastructure/taskiq/tasks']
+remnashop-taskiq-scheduler  |     │            │    │        └ SchedulerArgs(scheduler='src.infrastructure.taskiq.scheduler:scheduler', modules=['src.infrastructure.taskiq.tasks'], app_dir...
+remnashop-taskiq-scheduler  |     │            │    └ ['src.infrastructure.taskiq.tasks']
+remnashop-taskiq-scheduler  |     │            └ SchedulerArgs(scheduler='src.infrastructure.taskiq.scheduler:scheduler', modules=['src.infrastructure.taskiq.tasks'], app_dir...
+remnashop-taskiq-scheduler  |     └ <function import_tasks at 0x72de7f2b0b80>
+remnashop-taskiq-scheduler  |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/cli/utils.py", line 108, in import_tasks
+remnashop-taskiq-scheduler  |     import_from_modules(modules)
+remnashop-taskiq-scheduler  |     │                   └ ['src.infrastructure.taskiq.tasks']
+remnashop-taskiq-scheduler  |     └ <function import_from_modules at 0x72de7f2b0ae0>
+remnashop-taskiq-scheduler  | > File "/opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/cli/utils.py", line 68, in import_from_modules
+remnashop-taskiq-scheduler  |     import_module(module)
+remnashop-taskiq-scheduler  |     │             └ 'src.infrastructure.taskiq.tasks'
+remnashop-taskiq-scheduler  |     └ <function import_module at 0x72de82a5ac00>
+remnashop-taskiq-scheduler  |   File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+remnashop-taskiq-scheduler  |     return _bootstrap._gcd_import(name[level:], package, level)
+remnashop-taskiq-scheduler  |            │          │           │    │        │        └ 0
+remnashop-taskiq-scheduler  |            │          │           │    │        └ None
+remnashop-taskiq-scheduler  |            │          │           │    └ 0
+remnashop-taskiq-scheduler  |            │          │           └ 'src.infrastructure.taskiq.tasks'
+remnashop-taskiq-scheduler  |            │          └ <function _gcd_import at 0x72de82cb00e0>
+remnashop-taskiq-scheduler  |            └ <module '_frozen_importlib' (frozen)>
+remnashop-taskiq-scheduler  |   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+remnashop-taskiq-scheduler  |   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+remnashop-taskiq-scheduler  |   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+remnashop-taskiq-scheduler  |   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+remnashop-taskiq-scheduler  |   File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+remnashop-taskiq-scheduler  |   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+remnashop-taskiq-scheduler  | 
+remnashop-taskiq-scheduler  |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/__init__.py", line 1, in <module>
+remnashop-taskiq-scheduler  |     from . import notifications, payments, redirects, referrals, subscriptions, updates
+remnashop-taskiq-scheduler  |                   └ <module 'src.infrastructure.taskiq.tasks.notifications' from '/opt/remnashop/src/infrastructure/taskiq/tasks/notifications.py'>
+remnashop-taskiq-scheduler  | 
+remnashop-taskiq-scheduler  |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/payments.py", line 8, in <module>
+remnashop-taskiq-scheduler  |     from src.services.payment_gateway import PaymentGatewayService
+remnashop-taskiq-scheduler  | 
+remnashop-taskiq-scheduler  |   File "/opt/remnashop/src/services/payment_gateway.py", line 26, in <module>
+remnashop-taskiq-scheduler  |     from src.infrastructure.database.models.dto import (
+remnashop-taskiq-scheduler  | 
+remnashop-taskiq-scheduler  | ImportError: cannot import name 'TributeGatewaySettingsDto' from 'src.infrastructure.database.models.dto' (/opt/remnashop/src/infrastructure/database/models/dto/__init__.py)
+remnashop-taskiq-scheduler  | 2026-01-22 15:33:06.110 | INFO     | taskiq.cli.scheduler.run:404 | Starting scheduler.
+remnashop-taskiq-scheduler  | 2026-01-22 15:33:06.138 | INFO     | taskiq.cli.scheduler.run:406 | Startup completed.
+remnashop                   | Migrations deployed successfully
+remnashop                   | Uvicorn will run without reload
+remnashop-taskiq-worker     | Process worker-0:
+remnashop-taskiq-worker     | Traceback (most recent call last):
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+remnashop-taskiq-worker     |     self.run()
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/multiprocessing/process.py", line 108, in run
+remnashop-taskiq-worker     |     self._target(*self._args, **self._kwargs)
+remnashop-taskiq-worker     |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/cli/worker/run.py", line 139, in start_listen
+remnashop-taskiq-worker     |     broker = import_object(args.broker, app_dir=args.app_dir)
+remnashop-taskiq-worker     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/cli/utils.py", line 54, in import_object
+remnashop-taskiq-worker     |     module = import_module(import_spec[0])
+remnashop-taskiq-worker     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+remnashop-taskiq-worker     |     return _bootstrap._gcd_import(name[level:], package, level)
+remnashop-taskiq-worker     |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/worker.py", line 5, in <module>
+remnashop-taskiq-worker     |     from src.bot.dispatcher import create_bg_manager_factory, create_dispatcher, setup_dispatcher
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/dispatcher.py", line 7, in <module>
+remnashop-taskiq-worker     |     from src.bot.middlewares import setup_middlewares
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/middlewares/__init__.py", line 5, in <module>
+remnashop-taskiq-worker     |     from .access import AccessMiddleware
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/middlewares/access.py", line 10, in <module>
+remnashop-taskiq-worker     |     from src.services.access import AccessService
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/services/access.py", line 16, in <module>
+remnashop-taskiq-worker     |     from src.infrastructure.taskiq.tasks.notifications import send_access_opened_notifications_task
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/__init__.py", line 1, in <module>
+remnashop-taskiq-worker     |     from . import notifications, payments, redirects, referrals, subscriptions, updates
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/payments.py", line 8, in <module>
+remnashop-taskiq-worker     |     from src.services.payment_gateway import PaymentGatewayService
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/services/payment_gateway.py", line 26, in <module>
+remnashop-taskiq-worker     |     from src.infrastructure.database.models.dto import (
+remnashop-taskiq-worker     | ImportError: cannot import name 'TributeGatewaySettingsDto' from 'src.infrastructure.database.models.dto' (/opt/remnashop/src/infrastructure/database/models/dto/__init__.py)
+remnashop-taskiq-worker     | Process worker-1:
+remnashop-taskiq-worker     | Traceback (most recent call last):
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+remnashop-taskiq-worker     |     self.run()
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/multiprocessing/process.py", line 108, in run
+remnashop-taskiq-worker     |     self._target(*self._args, **self._kwargs)
+remnashop-taskiq-worker     |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/cli/worker/run.py", line 139, in start_listen
+remnashop-taskiq-worker     |     broker = import_object(args.broker, app_dir=args.app_dir)
+remnashop-taskiq-worker     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/cli/utils.py", line 54, in import_object
+remnashop-taskiq-worker     |     module = import_module(import_spec[0])
+remnashop-taskiq-worker     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+remnashop-taskiq-worker     |     return _bootstrap._gcd_import(name[level:], package, level)
+remnashop-taskiq-worker     |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/worker.py", line 5, in <module>
+remnashop-taskiq-worker     |     from src.bot.dispatcher import create_bg_manager_factory, create_dispatcher, setup_dispatcher
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/dispatcher.py", line 7, in <module>
+remnashop-taskiq-worker     |     from src.bot.middlewares import setup_middlewares
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/middlewares/__init__.py", line 5, in <module>
+remnashop-taskiq-worker     |     from .access import AccessMiddleware
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/middlewares/access.py", line 10, in <module>
+remnashop-taskiq-worker     |     from src.services.access import AccessService
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/services/access.py", line 16, in <module>
+remnashop-taskiq-worker     |     from src.infrastructure.taskiq.tasks.notifications import send_access_opened_notifications_task
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/__init__.py", line 1, in <module>
+remnashop-taskiq-worker     |     from . import notifications, payments, redirects, referrals, subscriptions, updates
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/payments.py", line 8, in <module>
+remnashop-taskiq-worker     |     from src.services.payment_gateway import PaymentGatewayService
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/services/payment_gateway.py", line 26, in <module>
+remnashop-taskiq-worker     |     from src.infrastructure.database.models.dto import (
+remnashop-taskiq-worker     | ImportError: cannot import name 'TributeGatewaySettingsDto' from 'src.infrastructure.database.models.dto' (/opt/remnashop/src/infrastructure/database/models/dto/__init__.py)
+remnashop-taskiq-worker     | [2026-01-22 15:33:19,280][taskiq.process-manager][INFO   ][MainProcess] worker-0 is dead. Scheduling reload.
+remnashop-taskiq-worker     | [2026-01-22 15:33:19,281][taskiq.process-manager][INFO   ][MainProcess] worker-1 is dead. Scheduling reload.
+remnashop                   | Traceback (most recent call last):
+remnashop                   |   File "/opt/remnashop/.venv/bin/uvicorn", line 10, in <module>
+remnashop                   |     sys.exit(main())
+remnashop                   |              ^^^^^^
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/click/core.py", line 1462, in __call__
+remnashop                   |     return self.main(*args, **kwargs)
+remnashop                   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/click/core.py", line 1383, in main
+remnashop                   |     rv = self.invoke(ctx)
+remnashop                   |          ^^^^^^^^^^^^^^^^
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/click/core.py", line 1246, in invoke
+remnashop                   |     return ctx.invoke(self.callback, **ctx.params)
+remnashop                   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/click/core.py", line 814, in invoke
+remnashop                   |     return callback(*args, **kwargs)
+remnashop                   |            ^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/uvicorn/main.py", line 423, in main
+remnashop                   |     run(
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/uvicorn/main.py", line 593, in run
+remnashop                   |     server.run()
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 67, in run
+remnashop                   |     return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+remnashop                   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop                   |   File "/usr/local/lib/python3.12/asyncio/runners.py", line 195, in run
+remnashop                   |     return runner.run(main)
+remnashop                   |            ^^^^^^^^^^^^^^^^
+remnashop                   |   File "/usr/local/lib/python3.12/asyncio/runners.py", line 118, in run
+remnashop                   |     return self._loop.run_until_complete(task)
+remnashop                   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop                   |   File "/usr/local/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+remnashop                   |     return future.result()
+remnashop                   |            ^^^^^^^^^^^^^^^
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 71, in serve
+remnashop                   |     await self._serve(sockets)
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 78, in _serve
+remnashop                   |     config.load()
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/uvicorn/config.py", line 439, in load
+remnashop                   |     self.loaded_app = import_from_string(self.app)
+remnashop                   |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/uvicorn/importer.py", line 19, in import_from_string
+remnashop                   |     module = importlib.import_module(module_str)
+remnashop                   |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop                   |   File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+remnashop                   |     return _bootstrap._gcd_import(name[level:], package, level)
+remnashop                   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop                   |   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+remnashop                   |   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+remnashop                   |   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+remnashop                   |   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+remnashop                   |   File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+remnashop                   |   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+remnashop                   |   File "/opt/remnashop/src/__main__.py", line 6, in <module>
+remnashop                   |     from src.api.app import create_app
+remnashop                   |   File "/opt/remnashop/src/api/app.py", line 5, in <module>
+remnashop                   |     from src.api.endpoints import TelegramWebhookEndpoint, payments_router, remnawave_router
+remnashop                   |   File "/opt/remnashop/src/api/endpoints/__init__.py", line 1, in <module>
+remnashop                   |     from .payments import router as payments_router
+remnashop                   |   File "/opt/remnashop/src/api/endpoints/payments.py", line 12, in <module>
+remnashop                   |     from src.infrastructure.taskiq.tasks.payments import handle_payment_transaction_task
+remnashop                   |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/__init__.py", line 1, in <module>
+remnashop                   |     from . import notifications, payments, redirects, referrals, subscriptions, updates
+remnashop                   |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/payments.py", line 8, in <module>
+remnashop                   |     from src.services.payment_gateway import PaymentGatewayService
+remnashop                   |   File "/opt/remnashop/src/services/payment_gateway.py", line 26, in <module>
+remnashop                   |     from src.infrastructure.database.models.dto import (
+remnashop                   | ImportError: cannot import name 'TributeGatewaySettingsDto' from 'src.infrastructure.database.models.dto' (/opt/remnashop/src/infrastructure/database/models/dto/__init__.py). Did you mean: 'AnyGatewaySettingsDto'?
+remnashop-taskiq-worker     | [2026-01-22 15:33:20,293][taskiq.process-manager][INFO   ][MainProcess] Process worker-0 restarted with pid 9
+remnashop-taskiq-worker     | [2026-01-22 15:33:20,411][taskiq.process-manager][INFO   ][MainProcess] Process worker-1 restarted with pid 10
+remnashop exited with code 1 (restarting)
+remnashop                   | Starting asset initialization, reset flag is 'false'
+remnashop                   | Volume mounted to '/opt/remnashop/assets' is not empty, skipping asset initialization to preserve user data
+remnashop                   | Migrating database
+remnashop                   | INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+remnashop                   | INFO  [alembic.runtime.migration] Will assume transactional DDL.
+remnashop                   | Migrations deployed successfully
+remnashop                   | Uvicorn will run without reload
+remnashop-taskiq-worker     | Process worker-0:
+remnashop-taskiq-worker     | Traceback (most recent call last):
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+remnashop-taskiq-worker     |     self.run()
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/multiprocessing/process.py", line 108, in run
+remnashop-taskiq-worker     |     self._target(*self._args, **self._kwargs)
+remnashop-taskiq-worker     |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/cli/worker/run.py", line 139, in start_listen
+remnashop-taskiq-worker     |     broker = import_object(args.broker, app_dir=args.app_dir)
+remnashop-taskiq-worker     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/cli/utils.py", line 54, in import_object
+remnashop-taskiq-worker     |     module = import_module(import_spec[0])
+remnashop-taskiq-worker     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+remnashop-taskiq-worker     |     return _bootstrap._gcd_import(name[level:], package, level)
+remnashop-taskiq-worker     |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/worker.py", line 5, in <module>
+remnashop-taskiq-worker     |     from src.bot.dispatcher import create_bg_manager_factory, create_dispatcher, setup_dispatcher
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/dispatcher.py", line 7, in <module>
+remnashop-taskiq-worker     |     from src.bot.middlewares import setup_middlewares
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/middlewares/__init__.py", line 5, in <module>
+remnashop-taskiq-worker     |     from .access import AccessMiddleware
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/middlewares/access.py", line 10, in <module>
+remnashop-taskiq-worker     |     from src.services.access import AccessService
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/services/access.py", line 16, in <module>
+remnashop-taskiq-worker     |     from src.infrastructure.taskiq.tasks.notifications import send_access_opened_notifications_task
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/__init__.py", line 1, in <module>
+remnashop-taskiq-worker     |     from . import notifications, payments, redirects, referrals, subscriptions, updates
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/payments.py", line 8, in <module>
+remnashop-taskiq-worker     |     from src.services.payment_gateway import PaymentGatewayService
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/services/payment_gateway.py", line 26, in <module>
+remnashop-taskiq-worker     |     from src.infrastructure.database.models.dto import (
+remnashop-taskiq-worker     | ImportError: cannot import name 'TributeGatewaySettingsDto' from 'src.infrastructure.database.models.dto' (/opt/remnashop/src/infrastructure/database/models/dto/__init__.py)
+remnashop-taskiq-worker     | [2026-01-22 15:33:36,552][taskiq.process-manager][INFO   ][MainProcess] worker-0 is dead. Scheduling reload.
+remnashop-taskiq-worker     | Process worker-1:
+remnashop-taskiq-worker     | Traceback (most recent call last):
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+remnashop-taskiq-worker     |     self.run()
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/multiprocessing/process.py", line 108, in run
+remnashop-taskiq-worker     |     self._target(*self._args, **self._kwargs)
+remnashop-taskiq-worker     |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/cli/worker/run.py", line 139, in start_listen
+remnashop-taskiq-worker     |     broker = import_object(args.broker, app_dir=args.app_dir)
+remnashop-taskiq-worker     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/cli/utils.py", line 54, in import_object
+remnashop-taskiq-worker     |     module = import_module(import_spec[0])
+remnashop-taskiq-worker     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+remnashop-taskiq-worker     |     return _bootstrap._gcd_import(name[level:], package, level)
+remnashop-taskiq-worker     |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/worker.py", line 5, in <module>
+remnashop-taskiq-worker     |     from src.bot.dispatcher import create_bg_manager_factory, create_dispatcher, setup_dispatcher
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/dispatcher.py", line 7, in <module>
+remnashop-taskiq-worker     |     from src.bot.middlewares import setup_middlewares
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/middlewares/__init__.py", line 5, in <module>
+remnashop-taskiq-worker     |     from .access import AccessMiddleware
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/middlewares/access.py", line 10, in <module>
+remnashop-taskiq-worker     |     from src.services.access import AccessService
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/services/access.py", line 16, in <module>
+remnashop-taskiq-worker     |     from src.infrastructure.taskiq.tasks.notifications import send_access_opened_notifications_task
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/__init__.py", line 1, in <module>
+remnashop-taskiq-worker     |     from . import notifications, payments, redirects, referrals, subscriptions, updates
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/payments.py", line 8, in <module>
+remnashop-taskiq-worker     |     from src.services.payment_gateway import PaymentGatewayService
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/services/payment_gateway.py", line 26, in <module>
+remnashop-taskiq-worker     |     from src.infrastructure.database.models.dto import (
+remnashop-taskiq-worker     | ImportError: cannot import name 'TributeGatewaySettingsDto' from 'src.infrastructure.database.models.dto' (/opt/remnashop/src/infrastructure/database/models/dto/__init__.py)
+remnashop-taskiq-worker     | [2026-01-22 15:33:37,564][taskiq.process-manager][INFO   ][MainProcess] Process worker-0 restarted with pid 11
+remnashop-taskiq-worker     | [2026-01-22 15:33:37,667][taskiq.process-manager][INFO   ][MainProcess] worker-1 is dead. Scheduling reload.
+remnashop-taskiq-worker     | [2026-01-22 15:33:38,694][taskiq.process-manager][INFO   ][MainProcess] Process worker-1 restarted with pid 12
+remnashop                   | Traceback (most recent call last):
+remnashop                   |   File "/opt/remnashop/.venv/bin/uvicorn", line 10, in <module>
+remnashop                   |     sys.exit(main())
+remnashop                   |              ^^^^^^
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/click/core.py", line 1462, in __call__
+remnashop                   |     return self.main(*args, **kwargs)
+remnashop                   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/click/core.py", line 1383, in main
+remnashop                   |     rv = self.invoke(ctx)
+remnashop                   |          ^^^^^^^^^^^^^^^^
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/click/core.py", line 1246, in invoke
+remnashop                   |     return ctx.invoke(self.callback, **ctx.params)
+remnashop                   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/click/core.py", line 814, in invoke
+remnashop                   |     return callback(*args, **kwargs)
+remnashop                   |            ^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/uvicorn/main.py", line 423, in main
+remnashop                   |     run(
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/uvicorn/main.py", line 593, in run
+remnashop                   |     server.run()
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 67, in run
+remnashop                   |     return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+remnashop                   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop                   |   File "/usr/local/lib/python3.12/asyncio/runners.py", line 195, in run
+remnashop                   |     return runner.run(main)
+remnashop                   |            ^^^^^^^^^^^^^^^^
+remnashop                   |   File "/usr/local/lib/python3.12/asyncio/runners.py", line 118, in run
+remnashop                   |     return self._loop.run_until_complete(task)
+remnashop                   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop                   |   File "/usr/local/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+remnashop                   |     return future.result()
+remnashop                   |            ^^^^^^^^^^^^^^^
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 71, in serve
+remnashop                   |     await self._serve(sockets)
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 78, in _serve
+remnashop                   |     config.load()
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/uvicorn/config.py", line 439, in load
+remnashop                   |     self.loaded_app = import_from_string(self.app)
+remnashop                   |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop                   |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/uvicorn/importer.py", line 19, in import_from_string
+remnashop                   |     module = importlib.import_module(module_str)
+remnashop                   |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop                   |   File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+remnashop                   |     return _bootstrap._gcd_import(name[level:], package, level)
+remnashop                   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop                   |   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+remnashop                   |   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+remnashop                   |   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+remnashop                   |   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+remnashop                   |   File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+remnashop                   |   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+remnashop                   |   File "/opt/remnashop/src/__main__.py", line 6, in <module>
+remnashop                   |     from src.api.app import create_app
+remnashop                   |   File "/opt/remnashop/src/api/app.py", line 5, in <module>
+remnashop                   |     from src.api.endpoints import TelegramWebhookEndpoint, payments_router, remnawave_router
+remnashop                   |   File "/opt/remnashop/src/api/endpoints/__init__.py", line 1, in <module>
+remnashop                   |     from .payments import router as payments_router
+remnashop                   |   File "/opt/remnashop/src/api/endpoints/payments.py", line 12, in <module>
+remnashop                   |     from src.infrastructure.taskiq.tasks.payments import handle_payment_transaction_task
+remnashop                   |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/__init__.py", line 1, in <module>
+remnashop                   |     from . import notifications, payments, redirects, referrals, subscriptions, updates
+remnashop                   |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/payments.py", line 8, in <module>
+remnashop                   |     from src.services.payment_gateway import PaymentGatewayService
+remnashop                   |   File "/opt/remnashop/src/services/payment_gateway.py", line 26, in <module>
+remnashop                   |     from src.infrastructure.database.models.dto import (
+remnashop                   | ImportError: cannot import name 'TributeGatewaySettingsDto' from 'src.infrastructure.database.models.dto' (/opt/remnashop/src/infrastructure/database/models/dto/__init__.py). Did you mean: 'AnyGatewaySettingsDto'?
+remnashop-redis             | 1:M 22 Jan 2026 15:33:42.077 * 100 changes in 300 seconds. Saving...
+remnashop-redis             | 1:M 22 Jan 2026 15:33:42.079 * Background saving started by pid 101879
+remnashop-redis             | 101879:C 22 Jan 2026 15:33:42.092 * DB saved on disk
+remnashop-redis             | 101879:C 22 Jan 2026 15:33:42.096 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+remnashop-redis             | 1:M 22 Jan 2026 15:33:42.182 * Background saving terminated with success
+remnashop exited with code 1 (restarting)
+remnashop                   | Starting asset initialization, reset flag is 'false'
+remnashop                   | Volume mounted to '/opt/remnashop/assets' is not empty, skipping asset initialization to preserve user data
+remnashop                   | Migrating database
+remnashop                   | INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+remnashop                   | INFO  [alembic.runtime.migration] Will assume transactional DDL.
+remnashop-taskiq-worker     | Process worker-0:
+remnashop-taskiq-worker     | Traceback (most recent call last):
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+remnashop-taskiq-worker     |     self.run()
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/multiprocessing/process.py", line 108, in run
+remnashop-taskiq-worker     |     self._target(*self._args, **self._kwargs)
+remnashop-taskiq-worker     |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/cli/worker/run.py", line 139, in start_listen
+remnashop-taskiq-worker     |     broker = import_object(args.broker, app_dir=args.app_dir)
+remnashop-taskiq-worker     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/cli/utils.py", line 54, in import_object
+remnashop-taskiq-worker     |     module = import_module(import_spec[0])
+remnashop-taskiq-worker     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+remnashop-taskiq-worker     |     return _bootstrap._gcd_import(name[level:], package, level)
+remnashop-taskiq-worker     |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/worker.py", line 5, in <module>
+remnashop-taskiq-worker     |     from src.bot.dispatcher import create_bg_manager_factory, create_dispatcher, setup_dispatcher
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/dispatcher.py", line 7, in <module>
+remnashop-taskiq-worker     |     from src.bot.middlewares import setup_middlewares
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/middlewares/__init__.py", line 5, in <module>
+remnashop-taskiq-worker     |     from .access import AccessMiddleware
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/middlewares/access.py", line 10, in <module>
+remnashop-taskiq-worker     |     from src.services.access import AccessService
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/services/access.py", line 16, in <module>
+remnashop-taskiq-worker     |     from src.infrastructure.taskiq.tasks.notifications import send_access_opened_notifications_task
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/__init__.py", line 1, in <module>
+remnashop-taskiq-worker     |     from . import notifications, payments, redirects, referrals, subscriptions, updates
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/payments.py", line 8, in <module>
+remnashop-taskiq-worker     |     from src.services.payment_gateway import PaymentGatewayService
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/services/payment_gateway.py", line 26, in <module>
+remnashop-taskiq-worker     |     from src.infrastructure.database.models.dto import (
+remnashop-taskiq-worker     | ImportError: cannot import name 'TributeGatewaySettingsDto' from 'src.infrastructure.database.models.dto' (/opt/remnashop/src/infrastructure/database/models/dto/__init__.py)
+remnashop                   | Migrations deployed successfully
+remnashop                   | Uvicorn will run without reload
+remnashop-taskiq-worker     | [2026-01-22 15:33:52,857][taskiq.process-manager][INFO   ][MainProcess] worker-0 is dead. Scheduling reload.
+remnashop-taskiq-worker     | Process worker-1:
+remnashop-taskiq-worker     | Traceback (most recent call last):
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+remnashop-taskiq-worker     |     self.run()
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/multiprocessing/process.py", line 108, in run
+remnashop-taskiq-worker     |     self._target(*self._args, **self._kwargs)
+remnashop-taskiq-worker     |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/cli/worker/run.py", line 139, in start_listen
+remnashop-taskiq-worker     |     broker = import_object(args.broker, app_dir=args.app_dir)
+remnashop-taskiq-worker     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "/opt/remnashop/.venv/lib/python3.12/site-packages/taskiq/cli/utils.py", line 54, in import_object
+remnashop-taskiq-worker     |     module = import_module(import_spec[0])
+remnashop-taskiq-worker     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+remnashop-taskiq-worker     |     return _bootstrap._gcd_import(name[level:], package, level)
+remnashop-taskiq-worker     |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+remnashop-taskiq-worker     |   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/worker.py", line 5, in <module>
+remnashop-taskiq-worker     |     from src.bot.dispatcher import create_bg_manager_factory, create_dispatcher, setup_dispatcher
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/dispatcher.py", line 7, in <module>
+remnashop-taskiq-worker     |     from src.bot.middlewares import setup_middlewares
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/middlewares/__init__.py", line 5, in <module>
+remnashop-taskiq-worker     |     from .access import AccessMiddleware
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/bot/middlewares/access.py", line 10, in <module>
+remnashop-taskiq-worker     |     from src.services.access import AccessService
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/services/access.py", line 16, in <module>
+remnashop-taskiq-worker     |     from src.infrastructure.taskiq.tasks.notifications import send_access_opened_notifications_task
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/__init__.py", line 1, in <module>
+remnashop-taskiq-worker     |     from . import notifications, payments, redirects, referrals, subscriptions, updates
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/infrastructure/taskiq/tasks/payments.py", line 8, in <module>
+remnashop-taskiq-worker     |     from src.services.payment_gateway import PaymentGatewayService
+remnashop-taskiq-worker     |   File "/opt/remnashop/src/services/payment_gateway.py", line 26, in <module>
+remnashop-taskiq-worker     |     from src.infrastructure.database.models.dto import (
+remnashop-taskiq-worker     | ImportError: cannot import name 'TributeGatewaySettingsDto' from 'src.infrastructure.database.models.dto' (/opt/remnashop/src/infrastructure/database/models/dto/__init__.py)
+remnashop-taskiq-worker     | [2026-01-22 15:33:53,866][taskiq.process-manager][INFO   ][MainProcess] Process worker-0 restarted with pid 13
+remnashop-taskiq-worker     | [2026-01-22 15:33:53,969][taskiq.process-manager][INFO   ][MainProcess] worker-1 is dead. Scheduling reload.
+remnashop-taskiq-worker     | [2026-01-22 15:33:54,980][taskiq.process-manager][INFO   ][MainProcess] Process worker-1 restarted with pid 14
