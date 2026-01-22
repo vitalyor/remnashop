@@ -1,6 +1,6 @@
 from aiogram_dialog import Dialog, StartMode, Window
-from aiogram_dialog.widgets.kbd import NumberedPager, Row, Start, StubScroll, SwitchTo
-from magic_filter import F
+from aiogram_dialog.widgets.kbd import Row, ScrollingGroup, Select, Start, SwitchTo
+from aiogram_dialog.widgets.text import Format
 
 from src.bot.keyboards import main_menu_button
 from src.bot.states import Dashboard, DashboardRemnawave
@@ -8,12 +8,16 @@ from src.bot.widgets import Banner, I18nFormat, IgnoreUpdate
 from src.core.enums import BannerName
 
 from .getters import (
+    host_getter,
     hosts_getter,
+    inbound_getter,
     inbounds_getter,
+    node_getter,
     nodes_getter,
     system_getter,
     users_getter,
 )
+from .handlers import on_host_select, on_inbound_select, on_node_select
 
 remnawave = Window(
     Banner(BannerName.DASHBOARD),
@@ -73,9 +77,21 @@ users = Window(
 
 hosts = Window(
     Banner(BannerName.DASHBOARD),
-    I18nFormat("msg-remnawave-hosts"),
-    StubScroll(id="scroll_hosts", pages="pages"),
-    NumberedPager(scroll="scroll_hosts", when=F["pages"] > 1),
+    I18nFormat("msg-remnawave-hosts-list", count=Format("{count}")),
+    ScrollingGroup(
+        Select(
+            text=Format("{item[label]}"),
+            id="host",
+            item_id_getter=lambda item: item["idx"],
+            items="hosts",
+            type_factory=int,
+            on_click=on_host_select,
+        ),
+        id="hosts_scroll",
+        width=1,
+        height=10,
+        hide_on_single_page=True,
+    ),
     Row(
         SwitchTo(
             text=I18nFormat("btn-back"),
@@ -86,14 +102,40 @@ hosts = Window(
     IgnoreUpdate(),
     state=DashboardRemnawave.HOSTS,
     getter=hosts_getter,
-    preview_data=hosts_getter,
+)
+
+host = Window(
+    Banner(BannerName.DASHBOARD),
+    I18nFormat("msg-remnawave-hosts"),
+    Row(
+        SwitchTo(
+            text=I18nFormat("btn-back"),
+            id="back",
+            state=DashboardRemnawave.HOSTS,
+        ),
+    ),
+    IgnoreUpdate(),
+    state=DashboardRemnawave.HOST,
+    getter=host_getter,
 )
 
 nodes = Window(
     Banner(BannerName.DASHBOARD),
-    I18nFormat("msg-remnawave-nodes"),
-    StubScroll(id="scroll_nodes", pages="pages"),
-    NumberedPager(scroll="scroll_nodes", when=F["pages"] > 1),
+    I18nFormat("msg-remnawave-nodes-list", count=Format("{count}")),
+    ScrollingGroup(
+        Select(
+            text=Format("{item[label]}"),
+            id="node",
+            item_id_getter=lambda item: item["idx"],
+            items="nodes",
+            type_factory=int,
+            on_click=on_node_select,
+        ),
+        id="nodes_scroll",
+        width=1,
+        height=10,
+        hide_on_single_page=True,
+    ),
     Row(
         SwitchTo(
             text=I18nFormat("btn-back"),
@@ -104,14 +146,40 @@ nodes = Window(
     IgnoreUpdate(),
     state=DashboardRemnawave.NODES,
     getter=nodes_getter,
-    preview_data=nodes_getter,
+)
+
+node = Window(
+    Banner(BannerName.DASHBOARD),
+    I18nFormat("msg-remnawave-nodes"),
+    Row(
+        SwitchTo(
+            text=I18nFormat("btn-back"),
+            id="back",
+            state=DashboardRemnawave.NODES,
+        ),
+    ),
+    IgnoreUpdate(),
+    state=DashboardRemnawave.NODE,
+    getter=node_getter,
 )
 
 inbounds = Window(
     Banner(BannerName.DASHBOARD),
-    I18nFormat("msg-remnawave-inbounds"),
-    StubScroll(id="scroll_inbounds", pages="pages"),
-    NumberedPager(scroll="scroll_inbounds", when=F["pages"] > 1),
+    I18nFormat("msg-remnawave-inbounds-list", count=Format("{count}")),
+    ScrollingGroup(
+        Select(
+            text=Format("{item[label]}"),
+            id="inbound",
+            item_id_getter=lambda item: item["idx"],
+            items="inbounds",
+            type_factory=int,
+            on_click=on_inbound_select,
+        ),
+        id="inbounds_scroll",
+        width=1,
+        height=10,
+        hide_on_single_page=True,
+    ),
     Row(
         SwitchTo(
             text=I18nFormat("btn-back"),
@@ -122,13 +190,30 @@ inbounds = Window(
     IgnoreUpdate(),
     state=DashboardRemnawave.INBOUNDS,
     getter=inbounds_getter,
-    preview_data=inbounds_getter,
+)
+
+inbound = Window(
+    Banner(BannerName.DASHBOARD),
+    I18nFormat("msg-remnawave-inbounds"),
+    Row(
+        SwitchTo(
+            text=I18nFormat("btn-back"),
+            id="back",
+            state=DashboardRemnawave.INBOUNDS,
+        ),
+    ),
+    IgnoreUpdate(),
+    state=DashboardRemnawave.INBOUND,
+    getter=inbound_getter,
 )
 
 router = Dialog(
     remnawave,
     users,
     hosts,
+    host,
     nodes,
+    node,
     inbounds,
+    inbound,
 )

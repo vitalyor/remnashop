@@ -1,7 +1,6 @@
-from typing import Any, Optional
+from typing import Any
 
 from aiogram_dialog import DialogManager
-from aiogram_dialog.widgets.common import ManagedScroll
 from dishka import FromDishka
 from dishka.integrations.aiogram_dialog import inject
 from fluentogram import TranslatorRunner
@@ -66,17 +65,19 @@ async def hosts_getter(
     i18n: FromDishka[TranslatorRunner],
     **kwargs: Any,
 ) -> dict[str, Any]:
-    widget: Optional[ManagedScroll] = dialog_manager.find("scroll_hosts")
-
-    if not widget:
-        raise ValueError()
-
-    current_page = await widget.get_page()
     result = await remnawave.hosts.get_all_hosts()
-    hosts = []
 
-    for host in result:
-        hosts.append(
+    hosts_list: list[dict[str, Any]] = []
+    hosts_details: list[str] = []
+
+    for idx, host in enumerate(result):
+        hosts_list.append(
+            {
+                "idx": idx,
+                "label": f"{'🟢' if not host.is_disabled else '🔴'} {host.remark}",
+            }
+        )
+        hosts_details.append(
             i18n.get(
                 "msg-remnawave-host-details",
                 remark=host.remark,
@@ -87,23 +88,33 @@ async def hosts_getter(
             )
         )
 
-    if hosts:
-        current_page = min(current_page, len(hosts) - 1)
-
-    if len(hosts) <= 10:
-        current_page = 0
-        hosts_view = "\n\n".join(hosts) if hosts else i18n.get("empty")
-        return {
-            "pages": 1,
-            "current_page": 1,
-            "host": hosts_view,
-        }
+    dialog_manager.dialog_data["hosts_details"] = hosts_details
 
     return {
-        "pages": len(hosts),
-        "current_page": current_page + 1,
-        "host": hosts[current_page],
+        "count": len(hosts_list),
+        "hosts": hosts_list,
     }
+
+
+@inject
+async def host_getter(
+    dialog_manager: DialogManager,
+    remnawave: FromDishka[RemnawaveSDK],
+    i18n: FromDishka[TranslatorRunner],
+    **kwargs: Any,
+) -> dict[str, Any]:
+    selected_idx = dialog_manager.dialog_data.get("selected_host_idx", 0)
+    details: list[str] = dialog_manager.dialog_data.get("hosts_details", [])
+
+    if not details:
+        await hosts_getter(dialog_manager=dialog_manager, remnawave=remnawave, i18n=i18n)
+        details = dialog_manager.dialog_data.get("hosts_details", [])
+
+    if not details:
+        return {"host": i18n.get("empty")}
+
+    selected_idx = max(0, min(int(selected_idx), len(details) - 1))
+    return {"host": details[selected_idx]}
 
 
 @inject
@@ -113,16 +124,11 @@ async def nodes_getter(
     i18n: FromDishka[TranslatorRunner],
     **kwargs: Any,
 ) -> dict[str, Any]:
-    widget: Optional[ManagedScroll] = dialog_manager.find("scroll_nodes")
-
-    if not widget:
-        raise ValueError()
-
-    current_page = await widget.get_page()
     result = await remnawave.nodes.get_all_nodes()
-    nodes = []
+    nodes_list: list[dict[str, Any]] = []
+    nodes_details: list[str] = []
 
-    for node in result:
+    for idx, node in enumerate(result):
         kwargs_for_i18n = {
             "xray_uptime": i18n_format_seconds(node.xray_uptime),
             "traffic_used": i18n_format_bytes_to_unit(node.traffic_used_bytes),
@@ -133,10 +139,17 @@ async def nodes_getter(
 
         translated_data = get_translated_kwargs(i18n, kwargs_for_i18n)
 
-        nodes.append(
+        country = format_country_code(code=node.country_code)
+        nodes_list.append(
+            {
+                "idx": idx,
+                "label": f"{'🟢' if node.is_connected else '🔴'} {country} {node.name}",
+            }
+        )
+        nodes_details.append(
             i18n.get(
                 "msg-remnawave-node-details",
-                country=format_country_code(code=node.country_code),
+                country=country,
                 name=node.name,
                 status="ON" if node.is_connected else "OFF",
                 address=node.address,
@@ -148,23 +161,32 @@ async def nodes_getter(
             )
         )
 
-    if nodes:
-        current_page = min(current_page, len(nodes) - 1)
-
-    if len(nodes) <= 10:
-        current_page = 0
-        nodes_view = "\n\n".join(nodes) if nodes else i18n.get("empty")
-        return {
-            "pages": 1,
-            "current_page": 1,
-            "node": nodes_view,
-        }
+    dialog_manager.dialog_data["nodes_details"] = nodes_details
 
     return {
-        "pages": len(nodes),
-        "current_page": current_page + 1,
-        "node": nodes[current_page],
+        "count": len(nodes_list),
+        "nodes": nodes_list,
     }
+
+@inject
+async def node_getter(
+    dialog_manager: DialogManager,
+    remnawave: FromDishka[RemnawaveSDK],
+    i18n: FromDishka[TranslatorRunner],
+    **kwargs: Any,
+) -> dict[str, Any]:
+    selected_idx = dialog_manager.dialog_data.get("selected_node_idx", 0)
+    details: list[str] = dialog_manager.dialog_data.get("nodes_details", [])
+
+    if not details:
+        await nodes_getter(dialog_manager=dialog_manager, remnawave=remnawave, i18n=i18n)
+        details = dialog_manager.dialog_data.get("nodes_details", [])
+
+    if not details:
+        return {"node": i18n.get("empty")}
+
+    selected_idx = max(0, min(int(selected_idx), len(details) - 1))
+    return {"node": details[selected_idx]}
 
 
 @inject
@@ -174,17 +196,21 @@ async def inbounds_getter(
     i18n: FromDishka[TranslatorRunner],
     **kwargs: Any,
 ) -> dict[str, Any]:
-    widget: Optional[ManagedScroll] = dialog_manager.find("scroll_inbounds")
-
-    if not widget:
-        raise ValueError()
-
-    current_page = await widget.get_page()
     result = await remnawave.inbounds.get_all_inbounds()
-    inbounds = []
+    inbounds_list: list[dict[str, Any]] = []
+    inbounds_details: list[str] = []
 
-    for inbound in result.inbounds:  # type: ignore[attr-defined]
-        inbounds.append(
+    for idx, inbound in enumerate(result.inbounds):  # type: ignore[attr-defined]
+        label_parts = [inbound.tag]
+        if getattr(inbound, "port", None):
+            label_parts.append(f":{int(inbound.port)}")
+        inbounds_list.append(
+            {
+                "idx": idx,
+                "label": " ".join(label_parts),
+            }
+        )
+        inbounds_details.append(
             i18n.get(
                 "msg-remnawave-inbound-details",
                 inbound_id=str(inbound.uuid),
@@ -196,20 +222,29 @@ async def inbounds_getter(
             )
         )
 
-    if inbounds:
-        current_page = min(current_page, len(inbounds) - 1)
-
-    if len(inbounds) <= 10:
-        current_page = 0
-        inbounds_view = "\n\n".join(inbounds) if inbounds else i18n.get("empty")
-        return {
-            "pages": 1,
-            "current_page": 1,
-            "inbound": inbounds_view,
-        }
+    dialog_manager.dialog_data["inbounds_details"] = inbounds_details
 
     return {
-        "pages": len(inbounds),
-        "current_page": current_page + 1,
-        "inbound": inbounds[current_page],
+        "count": len(inbounds_list),
+        "inbounds": inbounds_list,
     }
+
+@inject
+async def inbound_getter(
+    dialog_manager: DialogManager,
+    remnawave: FromDishka[RemnawaveSDK],
+    i18n: FromDishka[TranslatorRunner],
+    **kwargs: Any,
+) -> dict[str, Any]:
+    selected_idx = dialog_manager.dialog_data.get("selected_inbound_idx", 0)
+    details: list[str] = dialog_manager.dialog_data.get("inbounds_details", [])
+
+    if not details:
+        await inbounds_getter(dialog_manager=dialog_manager, remnawave=remnawave, i18n=i18n)
+        details = dialog_manager.dialog_data.get("inbounds_details", [])
+
+    if not details:
+        return {"inbound": i18n.get("empty")}
+
+    selected_idx = max(0, min(int(selected_idx), len(details) - 1))
+    return {"inbound": details[selected_idx]}

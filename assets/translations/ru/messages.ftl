@@ -664,15 +664,30 @@ msg-remnawave-hosts =
     
     { $host }
 
+msg-remnawave-hosts-list =
+    <b>🌐 Хосты</b>
+
+    Всего: <b>{ $count }</b>
+
 msg-remnawave-nodes = 
     <b>🖥️ Ноды</b>
 
     { $node }
 
+msg-remnawave-nodes-list =
+    <b>🖥️ Ноды</b>
+
+    Всего: <b>{ $count }</b>
+
 msg-remnawave-inbounds =
     <b>🔌 Инбаунды</b>
 
     { $inbound }
+
+msg-remnawave-inbounds-list =
+    <b>🔌 Инбаунды</b>
+
+    Всего: <b>{ $count }</b>
 
 
 # RemnaShop

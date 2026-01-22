@@ -150,8 +150,11 @@ class DashboardRemnawave(StatesGroup):
     MAIN = State()
     USERS = State()
     HOSTS = State()
+    HOST = State()
     NODES = State()
+    NODE = State()
     INBOUNDS = State()
+    INBOUND = State()
 
 
 class DashboardImporter(StatesGroup):
