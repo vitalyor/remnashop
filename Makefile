@@ -42,14 +42,19 @@ check-updates:
 	if [ ! -d .git ]; then echo "Not a git repo (no .git). Skipping update check."; exit 0; fi; \
 	git remote get-url $(GIT_REMOTE) >/dev/null 2>&1 || { echo "Remote '$(GIT_REMOTE)' not found"; exit 1; }; \
 	git fetch --prune $(GIT_REMOTE) >/dev/null; \
-	LOCAL=$$(git rev-parse HEAD); \
 	REMOTE=$$(git rev-parse $(GIT_REMOTE)/$(GIT_BRANCH)); \
-	if [ "$$LOCAL" = "$$REMOTE" ]; then \
-		echo "No updates: $$LOCAL"; \
+	if git rev-parse --verify HEAD >/dev/null 2>&1; then \
+		LOCAL=$$(git rev-parse HEAD); \
+		if [ "$$LOCAL" = "$$REMOTE" ]; then \
+			echo "No updates: $$LOCAL"; \
+		else \
+			echo "Updates available:"; \
+			echo "  local : $$LOCAL"; \
+			echo "  remote: $$REMOTE"; \
+		fi; \
 	else \
-		echo "Updates available:"; \
-		echo "  local : $$LOCAL"; \
-		echo "  remote: $$REMOTE"; \
+		echo "Repo has no checked-out commit yet (HEAD missing). Remote tip: $$REMOTE"; \
+		echo "Run: make git-repair (or: git checkout -B $(GIT_BRANCH) $(GIT_REMOTE)/$(GIT_BRANCH))"; \
 	fi
 
 .PHONY: git-update
@@ -58,13 +63,20 @@ git-update:
 	if [ ! -d .git ]; then echo "Not a git repo (no .git). Skipping git-update."; exit 0; fi; \
 	git remote get-url $(GIT_REMOTE) >/dev/null 2>&1 || { echo "Remote '$(GIT_REMOTE)' not found"; exit 1; }; \
 	git fetch --prune $(GIT_REMOTE) >/dev/null; \
-	LOCAL=$$(git rev-parse HEAD); \
 	REMOTE=$$(git rev-parse $(GIT_REMOTE)/$(GIT_BRANCH)); \
-	if [ "$$LOCAL" = "$$REMOTE" ]; then \
-		echo "Already up to date: $$LOCAL"; \
+	if ! git rev-parse --verify HEAD >/dev/null 2>&1; then \
+		echo "HEAD is missing (repo not checked out yet). Checking out $(GIT_REMOTE)/$(GIT_BRANCH)..."; \
+		git checkout -B $(GIT_BRANCH) $(GIT_REMOTE)/$(GIT_BRANCH); \
+		LOCAL=$$(git rev-parse HEAD); \
+		echo "Checked out: $$LOCAL"; \
 	else \
-		echo "Pulling changes..."; \
-		git pull --ff-only $(GIT_REMOTE) $(GIT_BRANCH); \
+		LOCAL=$$(git rev-parse HEAD); \
+		if [ "$$LOCAL" = "$$REMOTE" ]; then \
+			echo "Already up to date: $$LOCAL"; \
+		else \
+			echo "Pulling changes..."; \
+			git pull --ff-only $(GIT_REMOTE) $(GIT_BRANCH); \
+		fi; \
 	fi
 
 # Optional: initialize git repo in the current directory (in-place)
@@ -75,13 +87,39 @@ GIT_URL ?=
 
 git-init:
 	@set -e; \
-	if [ -d .git ]; then echo "Already a git repo."; exit 0; fi; \
+	if [ -d .git ]; then \
+		# If .git exists but nothing is checked out yet, try to repair in-place. \
+		if git rev-parse --verify HEAD >/dev/null 2>&1; then \
+			echo "Already a git repo."; exit 0; \
+		else \
+			echo "Repo exists but HEAD is missing. Attempting in-place checkout..."; \
+			git remote get-url $(GIT_REMOTE) >/dev/null 2>&1 || { \
+				if [ -z "$(GIT_URL)" ]; then echo "GIT_URL is empty. Example: make git-init GIT_URL=https://github.com/snoups/remnashop.git"; exit 1; fi; \
+				git remote add $(GIT_REMOTE) "$(GIT_URL)"; \
+			}; \
+			git fetch --prune $(GIT_REMOTE); \
+			git checkout -B $(GIT_BRANCH) $(GIT_REMOTE)/$(GIT_BRANCH); \
+			echo "Git repaired. Remote=$(GIT_REMOTE) Branch=$(GIT_BRANCH)"; \
+			exit 0; \
+		fi; \
+	fi; \
 	if [ -z "$(GIT_URL)" ]; then echo "GIT_URL is empty. Example: make git-init GIT_URL=https://github.com/snoups/remnashop.git"; exit 1; fi; \
 	git init; \
 	git remote add $(GIT_REMOTE) "$(GIT_URL)"; \
 	git fetch --prune $(GIT_REMOTE); \
 	git checkout -B $(GIT_BRANCH) $(GIT_REMOTE)/$(GIT_BRANCH); \
 	echo "Git initialized. Remote=$(GIT_REMOTE) Branch=$(GIT_BRANCH)"
+
+# Repair an existing .git that has no checked-out commit yet
+.PHONY: git-repair
+
+git-repair:
+	@set -e; \
+	if [ ! -d .git ]; then echo "Not a git repo (no .git). Run: make git-init GIT_URL=..."; exit 1; fi; \
+	git remote get-url $(GIT_REMOTE) >/dev/null 2>&1 || { echo "Remote '$(GIT_REMOTE)' not found. Run: make git-init GIT_URL=..."; exit 1; }; \
+	git fetch --prune $(GIT_REMOTE); \
+	git checkout -B $(GIT_BRANCH) $(GIT_REMOTE)/$(GIT_BRANCH); \
+	echo "Git repaired. Now at $$(git rev-parse HEAD)"
 
 .PHONY: up
 up:
