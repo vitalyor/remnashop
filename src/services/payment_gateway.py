@@ -37,8 +37,8 @@ from src.infrastructure.database.models.dto import (
     UserDto,
     YookassaGatewaySettingsDto,
     YoomoneyGatewaySettingsDto,
-    TributeGatewaySettingsDto,
 )
+from src.infrastructure.database.models.dto.payment_gateway import TributeGatewaySettingsDto
 from src.infrastructure.database.models.sql import PaymentGateway
 from src.infrastructure.payment_gateways import BasePaymentGateway, PaymentGatewayFactory
 from src.infrastructure.redis import RedisRepository

@@ -15,12 +15,8 @@ from src.core.utils.formatters import (
     i18n_format_expire_time,
     i18n_format_traffic_limit,
 )
-from src.infrastructure.database.models.dto import (
-    PlanDto,
-    PriceDetailsDto,
-    TributeGatewaySettingsDto,
-    UserDto,
-)
+from src.infrastructure.database.models.dto import PlanDto, PriceDetailsDto, UserDto
+from src.infrastructure.database.models.dto.payment_gateway import TributeGatewaySettingsDto
 from src.services.payment_gateway import PaymentGatewayService
 from src.services.plan import PlanService
 from src.services.pricing import PricingService
