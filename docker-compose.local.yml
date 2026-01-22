@@ -49,6 +49,7 @@ services:
       retries: 3
 
   remnashop: &remnashop
+    image: remnashop:local
     build:
       context: .
       dockerfile: Dockerfile.local

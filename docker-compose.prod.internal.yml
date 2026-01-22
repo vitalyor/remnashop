@@ -46,9 +46,10 @@ services:
       retries: 3
 
   remnashop: &remnashop
+    image: remnashop:local
     build:
       context: .
-      dockerfile: Dockerfile.local
+      dockerfile: Dockerfile
     container_name: "remnashop"
     hostname: remnashop
     restart: unless-stopped
