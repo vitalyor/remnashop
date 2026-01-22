@@ -39,7 +39,7 @@ downgrade:
 .PHONY: check-updates
 check-updates:
 	@set -e; \
-	if [ ! -d .git ]; then echo "Not a git repo (no .git)."; exit 1; fi; \
+	if [ ! -d .git ]; then echo "Not a git repo (no .git). Skipping update check."; exit 0; fi; \
 	git remote get-url $(GIT_REMOTE) >/dev/null 2>&1 || { echo "Remote '$(GIT_REMOTE)' not found"; exit 1; }; \
 	git fetch --prune $(GIT_REMOTE) >/dev/null; \
 	LOCAL=$$(git rev-parse HEAD); \
@@ -55,7 +55,7 @@ check-updates:
 .PHONY: git-update
 git-update:
 	@set -e; \
-	if [ ! -d .git ]; then echo "Not a git repo (no .git)."; exit 1; fi; \
+	if [ ! -d .git ]; then echo "Not a git repo (no .git). Skipping git-update."; exit 0; fi; \
 	git remote get-url $(GIT_REMOTE) >/dev/null 2>&1 || { echo "Remote '$(GIT_REMOTE)' not found"; exit 1; }; \
 	git fetch --prune $(GIT_REMOTE) >/dev/null; \
 	LOCAL=$$(git rev-parse HEAD); \
@@ -66,6 +66,22 @@ git-update:
 		echo "Pulling changes..."; \
 		git pull --ff-only $(GIT_REMOTE) $(GIT_BRANCH); \
 	fi
+
+# Optional: initialize git repo in the current directory (in-place)
+# Usage:
+#   make git-init GIT_URL=https://github.com/snoups/remnashop.git
+.PHONY: git-init
+GIT_URL ?=
+
+git-init:
+	@set -e; \
+	if [ -d .git ]; then echo "Already a git repo."; exit 0; fi; \
+	if [ -z "$(GIT_URL)" ]; then echo "GIT_URL is empty. Example: make git-init GIT_URL=https://github.com/snoups/remnashop.git"; exit 1; fi; \
+	git init; \
+	git remote add $(GIT_REMOTE) "$(GIT_URL)"; \
+	git fetch --prune $(GIT_REMOTE); \
+	git checkout -B $(GIT_BRANCH) $(GIT_REMOTE)/$(GIT_BRANCH); \
+	echo "Git initialized. Remote=$(GIT_REMOTE) Branch=$(GIT_BRANCH)"
 
 .PHONY: up
 up:
