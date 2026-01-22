@@ -92,8 +92,9 @@ services:
         condition: service_healthy
       remnashop-db:
         condition: service_healthy
-      healthcheck:
-        disable: true
+
+    healthcheck:
+      test: ["NONE"]
 
   remnashop-taskiq-scheduler:
     <<: *remnashop
@@ -108,7 +109,7 @@ services:
         condition: service_healthy
 
     healthcheck:
-      disable: true
+      test: ["NONE"]
 
 networks:
   remnawave-network:
