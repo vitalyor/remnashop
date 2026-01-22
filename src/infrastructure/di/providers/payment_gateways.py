@@ -37,9 +37,8 @@ GATEWAY_MAP: dict[PaymentGatewayType, Type[BasePaymentGateway]] = {
 
 class PaymentGatewaysProvider(Provider):
     scope = Scope.APP
-    _cached_gateways: dict[PaymentGatewayType, BasePaymentGateway] = {}
 
-    @provide()
+    @provide(scope=Scope.REQUEST)
     def get_gateway_factory(
         self,
         bot: Bot,
@@ -51,33 +50,21 @@ class PaymentGatewaysProvider(Provider):
     ) -> PaymentGatewayFactory:
         def create_gateway(gateway: PaymentGatewayDto) -> BasePaymentGateway:
             gateway_type = gateway.type
+            gateway_instance = GATEWAY_MAP.get(gateway_type)
 
-            if gateway_type in self._cached_gateways:
-                cached_gateway = self._cached_gateways[gateway_type]
+            if not gateway_instance:
+                raise ValueError(f"Unknown gateway type '{gateway_type}'")
 
-                if cached_gateway.data != gateway:
-                    logger.warning(
-                        f"Gateway '{gateway_type}' data changed. Re-initializing instance"
-                    )
-                    del self._cached_gateways[gateway_type]
-
-            if gateway_type not in self._cached_gateways:
-                gateway_instance = GATEWAY_MAP.get(gateway_type)
-
-                if not gateway_instance:
-                    raise ValueError(f"Unknown gateway type '{gateway_type}'")
-
-                self._cached_gateways[gateway_type] = gateway_instance(
-                    gateway=gateway,
-                    bot=bot,
-                    config=config,
-                    transaction_service=transaction_service,
-                    user_service=user_service,
-                    plan_service=plan_service,
-                    subscription_service=subscription_service,
-                )
-                logger.debug(f"Initialized new gateway '{gateway_type}' instance")
-
-            return self._cached_gateways[gateway_type]
+            # NOTE: Payment gateways depend on request-scoped services (TransactionService, etc),
+            # so we must not cache gateway instances at APP scope.
+            return gateway_instance(
+                gateway=gateway,
+                bot=bot,
+                config=config,
+                transaction_service=transaction_service,
+                user_service=user_service,
+                plan_service=plan_service,
+                subscription_service=subscription_service,
+            )
 
         return create_gateway
