@@ -72,6 +72,7 @@ from .handlers import (
     on_sync,
     on_sync_from_remnashop,
     on_sync_from_remnawave,
+    on_user_delete_db,
     on_traffic_limit_input,
     on_traffic_limit_select,
     on_transaction_select,
@@ -149,6 +150,14 @@ user = Window(
             text=I18nFormat("btn-user-block", is_blocked=F["is_blocked"]),
             id="block",
             on_click=on_block_toggle,
+            when=F["is_not_self"] & F["can_edit"],
+        ),
+    ),
+    Row(
+        Button(
+            text=I18nFormat("btn-user-delete-db"),
+            id="delete_db",
+            on_click=on_user_delete_db,
             when=F["is_not_self"] & F["can_edit"],
         ),
     ),

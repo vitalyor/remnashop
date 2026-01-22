@@ -1,6 +1,6 @@
 from typing import Any, List, Optional
 
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 
 from src.core.enums import ReferralRewardType
 from src.infrastructure.database.models.sql import Referral, ReferralReward
@@ -58,3 +58,25 @@ class ReferralRepository(BaseRepository):
 
     async def update_reward(self, reward_id: int, **data: Any) -> Optional[ReferralReward]:
         return await self._update(ReferralReward, ReferralReward.id == reward_id, **data)
+
+    async def delete_user_related(self, telegram_id: int) -> None:
+        referrals = await self._get_many(
+            Referral,
+            or_(
+                Referral.referrer_telegram_id == telegram_id,
+                Referral.referred_telegram_id == telegram_id,
+            ),
+        )
+        referral_ids = [ref.id for ref in referrals]
+
+        if referral_ids:
+            await self._delete(ReferralReward, ReferralReward.referral_id.in_(referral_ids))
+
+        await self._delete(ReferralReward, ReferralReward.user_telegram_id == telegram_id)
+        await self._delete(
+            Referral,
+            or_(
+                Referral.referrer_telegram_id == telegram_id,
+                Referral.referred_telegram_id == telegram_id,
+            ),
+        )

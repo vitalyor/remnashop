@@ -6,6 +6,7 @@ from aiogram.types import User as AiogramUser
 from fluentogram import TranslatorHub
 from loguru import logger
 from redis.asyncio import Redis
+from sqlalchemy.exc import IntegrityError
 
 from src.core.config import AppConfig
 from src.core.constants import (
@@ -160,15 +161,27 @@ class UserService(BaseService):
         return await self.update(user)
 
     async def delete(self, user: UserDto) -> bool:
-        async with self.uow:
-            result = await self.uow.repository.users.delete(user.telegram_id)
+        try:
+            async with self.uow:
+                telegram_id = user.telegram_id
 
-        if result:
-            await self.clear_user_cache(user.telegram_id)
-            await self._remove_from_recent_activity(user.telegram_id)
+                # Remove dependent rows without ON DELETE CASCADE to avoid FK violations.
+                await self.uow.repository.promocode_activations.delete_by_user(telegram_id)
+                await self.uow.repository.transactions.delete_by_user(telegram_id)
+                await self.uow.repository.referrals.delete_user_related(telegram_id)
 
-        logger.info(f"Deleted user '{user.telegram_id}': '{result}'")
-        return result
+                result = await self.uow.repository.users.delete(telegram_id)
+
+            if result:
+                await self.clear_user_cache(user.telegram_id)
+                await self._remove_from_recent_activity(user.telegram_id)
+
+            logger.info(f"Deleted user '{user.telegram_id}': '{result}'")
+            return result
+
+        except IntegrityError as exc:
+            logger.exception(f"Failed to delete user '{user.telegram_id}' due to FK constraints: {exc}")
+            return False
 
     async def get_by_partial_name(self, query: str) -> list[UserDto]:
         async with self.uow:
@@ -382,6 +395,7 @@ class UserService(BaseService):
         list_cache_keys_to_invalidate = [
             build_key("cache", "get_blocked_users"),
             build_key("cache", "count"),
+            build_key("cache", "get_all"),
         ]
 
         for role in UserRole:

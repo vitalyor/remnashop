@@ -26,6 +26,9 @@ class TransactionRepository(BaseRepository):
     async def update(self, payment_id: UUID, **data: Any) -> Optional[Transaction]:
         return await self._update(Transaction, Transaction.payment_id == payment_id, **data)
 
+    async def delete_by_user(self, telegram_id: int) -> int:
+        return await self._delete(Transaction, Transaction.user_telegram_id == telegram_id)
+
     async def count(self) -> int:
         return await self._count(Transaction, Transaction.id)
 

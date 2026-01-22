@@ -91,6 +91,7 @@ btn-users-search = 🔍 Поиск пользователя
 btn-users-recent-registered = 🆕 Последние зарегистрированные
 btn-users-recent-activity = 📝 Последние взаимодействующие
 btn-users-blacklist = 🚫 Черный список
+btn-users-all = 📋 Все пользователи
 btn-users-unblock-all = 🔓 Разблокировать всех
 
 
@@ -118,6 +119,7 @@ btn-user-sync = 🌀 Синхронизировать
 btn-user-sync-remnawave = 🌊 Использовать данные Remnawave
 btn-user-sync-remnashop = 🛍 Использовать данные Remnashop
 btn-user-give-subscription = 🎁 Выдать подписку
+btn-user-delete-db = 🗑 Удалить пользователя
 btn-user-subscription-internal-squads = ⏺️ Внутренние сквады
 btn-user-subscription-external-squads = ⏹️ Внешний сквад
 

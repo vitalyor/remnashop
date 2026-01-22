@@ -14,7 +14,7 @@ from remnapy import RemnawaveSDK
 from remnapy.exceptions import NotFoundError
 
 from src.bot.keyboards import get_contact_support_keyboard
-from src.bot.states import DashboardUser
+from src.bot.states import DashboardUser, DashboardUsers
 from src.core.config import AppConfig
 from src.core.constants import USER_KEY
 from src.core.enums import SubscriptionStatus, UserRole
@@ -208,6 +208,46 @@ async def on_devices(
         return
 
     await dialog_manager.switch_to(state=DashboardUser.DEVICES_LIST)
+
+
+@inject
+async def on_user_delete_db(
+    callback: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+    user_service: FromDishka[UserService],
+    notification_service: FromDishka[NotificationService],
+) -> None:
+    user: UserDto = dialog_manager.middleware_data[USER_KEY]
+    target_telegram_id = dialog_manager.dialog_data["target_telegram_id"]
+    target_user = await user_service.get(telegram_id=target_telegram_id)
+
+    if not target_user:
+        raise ValueError(f"User '{target_telegram_id}' not found")
+
+    if is_double_click(dialog_manager, key="user_delete_confirm", cooldown=10):
+        deleted = await user_service.delete(target_user)
+        if deleted:
+            await notification_service.notify_user(
+                user=user,
+                payload=MessagePayload(i18n_key="ntf-user-deleted-db"),
+            )
+            logger.warning(f"{log(user)} Deleted {log(target_user)} from DB")
+            await dialog_manager.start(state=DashboardUsers.MAIN, mode=StartMode.RESET_STACK)
+            return
+
+        await notification_service.notify_user(
+            user=user,
+            payload=MessagePayload(i18n_key="ntf-user-delete-db-failed"),
+        )
+        logger.warning(f"{log(user)} Failed to delete {log(target_user)} from DB")
+        return
+
+    await notification_service.notify_user(
+        user=user,
+        payload=MessagePayload(i18n_key="ntf-double-click-confirm"),
+    )
+    logger.debug(f"{log(user)} Waiting for confirmation to delete user '{target_telegram_id}'")
 
 
 @inject

@@ -70,6 +70,7 @@ class DashboardUsers(StatesGroup):
     RECENT_REGISTERED = State()
     RECENT_ACTIVITY = State()
     BLACKLIST = State()
+    ALL = State()
 
 
 class DashboardUser(StatesGroup):

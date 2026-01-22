@@ -23,6 +23,19 @@ async def search_results_getter(dialog_manager: DialogManager, **kwargs: Any) ->
 
 
 @inject
+async def all_users_getter(
+    dialog_manager: DialogManager,
+    user_service: FromDishka[UserService],
+    **kwargs: Any,
+) -> dict[str, Any]:
+    users = await user_service.get_all()
+    return {
+        "all_users": users,
+        "count_users": len(users),
+    }
+
+
+@inject
 async def recent_registered_getter(
     dialog_manager: DialogManager,
     user_service: FromDishka[UserService],

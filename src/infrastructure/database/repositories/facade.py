@@ -4,6 +4,7 @@ from .broadcast import BroadcastRepository
 from .payment_gateway import PaymentGatewayRepository
 from .plan import PlanRepository
 from .promocode import PromocodeRepository
+from .promocode_activation import PromocodeActivationRepository
 from .referral import ReferralRepository
 from .settings import SettingsRepository
 from .subscription import SubscriptionRepository
@@ -17,6 +18,7 @@ class RepositoriesFacade:
     gateways: PaymentGatewayRepository
     plans: PlanRepository
     promocodes: PromocodeRepository
+    promocode_activations: PromocodeActivationRepository
     subscriptions: SubscriptionRepository
     transactions: TransactionRepository
     users: UserRepository
@@ -30,6 +32,7 @@ class RepositoriesFacade:
         self.gateways = PaymentGatewayRepository(session)
         self.plans = PlanRepository(session)
         self.promocodes = PromocodeRepository(session)
+        self.promocode_activations = PromocodeActivationRepository(session)
         self.subscriptions = SubscriptionRepository(session)
         self.transactions = TransactionRepository(session)
         self.users = UserRepository(session)

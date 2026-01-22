@@ -362,6 +362,8 @@ ntf-user-message-not-sent = <i>❌ Не удалось отправить соо
 ntf-user-sync-already = <i>✅ Данные подписки совпадают.</i>
 ntf-user-sync-missing-data = <i>⚠️ Синхронизация невозможна. Данные подписки отсутствуют и на панели, и в боте.</i>
 ntf-user-sync-success = <i>✅ Синхронизация подписки выполнена.</i>
+ntf-user-deleted-db = <i>✅ Пользователь удалён из базы данных.</i>
+ntf-user-delete-db-failed = <i>❌ Не удалось удалить пользователя из базы данных.</i>
 
 ntf-user-invalid-expire-time = <i>❌ Невозможно { $operation ->
     [ADD] продлить подписку на указанное количество дней

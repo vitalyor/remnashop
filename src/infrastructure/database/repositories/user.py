@@ -30,7 +30,7 @@ class UserRepository(BaseRepository):
         return await self._get_one(User, User.referral_code == referral_code)
 
     async def get_all(self) -> list[User]:
-        return await self._get_many(User)
+        return await self._get_many(User, order_by=User.id.desc())
 
     async def update(self, telegram_id: int, **data: Any) -> Optional[User]:
         return await self._update(User, User.telegram_id == telegram_id, **data)

@@ -10,6 +10,7 @@ from src.bot.widgets import Banner, I18nFormat, IgnoreUpdate
 from src.core.enums import BannerName
 
 from .getters import (
+    all_users_getter,
     blacklist_getter,
     recent_activity_getter,
     recent_registered_getter,
@@ -49,6 +50,13 @@ users = Window(
         ),
     ),
     Row(
+        SwitchTo(
+            text=I18nFormat("btn-users-all"),
+            id="all",
+            state=DashboardUsers.ALL,
+        ),
+    ),
+    Row(
         Start(
             text=I18nFormat("btn-back"),
             id="back",
@@ -59,6 +67,35 @@ users = Window(
     ),
     IgnoreUpdate(),
     state=DashboardUsers.MAIN,
+)
+
+all_users = Window(
+    Banner(BannerName.DASHBOARD),
+    I18nFormat("msg-users-all", count_users=F["count_users"]),
+    ScrollingGroup(
+        Select(
+            text=Format("{item.telegram_id} ({item.name})"),
+            id="user",
+            item_id_getter=lambda item: item.telegram_id,
+            items="all_users",
+            type_factory=int,
+            on_click=on_user_select,
+        ),
+        id="scroll",
+        width=1,
+        height=7,
+        hide_on_single_page=True,
+    ),
+    Row(
+        SwitchTo(
+            text=I18nFormat("btn-back"),
+            id="back",
+            state=DashboardUsers.MAIN,
+        ),
+    ),
+    IgnoreUpdate(),
+    state=DashboardUsers.ALL,
+    getter=all_users_getter,
 )
 
 search = Window(
@@ -203,6 +240,7 @@ blacklist = Window(
 
 router = Dialog(
     users,
+    all_users,
     search,
     recent_registered,
     recent_activity,
