@@ -91,6 +91,7 @@ ps:
 deploy:
 	@$(MAKE) git-update
 	@$(MAKE) up
+	@docker restart remnawave-nginx || true
 	@echo "Done: code checked/updated and containers are up"
 
 
