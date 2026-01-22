@@ -76,9 +76,37 @@ async def field_getter(
     if not gateway.settings:
         raise ValueError(f"Gateway '{gateway_id}' has not settings")
 
+    hint: Any = False
+    if gateway.type.value == "TRIBUTE":
+        if selected_field == "api_key":
+            hint = "API-ключ Tribute из панели автора (используется для проверки подписи webhook)."
+        elif selected_field == "subscription_link":
+            hint = (
+                "Ссылка на подписку Tribute (её даём пользователю). "
+                "Для подписки сумма в URL не передаётся."
+            )
+        elif selected_field == "donate_link":
+            hint = (
+                "Ссылка на донат Tribute. Используй только если принимаешь донаты "
+                "(тогда бот добавляет amount в URL)."
+            )
+        elif selected_field == "plan_id":
+            hint = (
+                "ID тарифа Remnashop, который выдавать/продлевать после оплаты. "
+                "ID теперь видно в «Конфигураторе плана»."
+            )
+        elif selected_field == "period_map_json":
+            hint = (
+                "JSON-объект маппинга «период/сумма → дни». Рекомендуется строгий режим.\n"
+                "Пример для 1 месяца за 100₽:\n"
+                "{\"amount:10000\": 30}\n"
+                "Сумма указывается в копейках."
+            )
+
     return {
         "gateway_type": gateway.type,
         "field": selected_field,
+        "hint": hint,
     }
 
 

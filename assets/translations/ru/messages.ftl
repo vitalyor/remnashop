@@ -706,6 +706,11 @@ msg-gateways-field =
 
     Введите новое значение для { $field }.
 
+    { $hint ->
+        [false] { "" }
+        *[other] <blockquote>{ $hint }</blockquote>
+    }
+
 
 # Referral
 msg-referral-main =
