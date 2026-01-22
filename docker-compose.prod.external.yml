@@ -76,7 +76,7 @@ services:
   
     healthcheck:
       test: [ "CMD-SHELL", "wget -qSO- http://127.0.0.1:5000/api/v1/telegram 2>&1 | head -n1 | grep -Eq 'HTTP/[12].*405|HTTP/[12].*200'" ]
-      interval: 30s
+      interval: 300s
       timeout: 5s
       retries: 5
       start_period: 20s
