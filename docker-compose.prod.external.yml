@@ -102,6 +102,9 @@ services:
       remnashop-db:
         condition: service_healthy
 
+    healthcheck:
+      disable: true
+
 networks:
   remnawave-network:
     name: remnawave-network
