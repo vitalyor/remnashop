@@ -18,6 +18,143 @@ from src.services.user import UserService
 from .user.handlers import start_user_window
 
 
+async def _set_page(
+    dialog_manager: DialogManager,
+    key: str,
+    value: int,
+) -> None:
+    dialog_manager.dialog_data[key] = max(1, int(value))
+    await dialog_manager.switch_to(state=dialog_manager.current_context().state)
+
+
+async def on_page_info(
+    callback: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+) -> None:
+    await callback.answer()
+
+
+async def on_all_users_prev(
+    callback: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+) -> None:
+    await _set_page(
+        dialog_manager,
+        "page_all_users",
+        int(dialog_manager.dialog_data.get("page_all_users", 1)) - 1,
+    )
+
+
+async def on_all_users_next(
+    callback: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+) -> None:
+    await _set_page(
+        dialog_manager,
+        "page_all_users",
+        int(dialog_manager.dialog_data.get("page_all_users", 1)) + 1,
+    )
+
+
+async def on_recent_registered_prev(
+    callback: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+) -> None:
+    await _set_page(
+        dialog_manager,
+        "page_recent_registered",
+        int(dialog_manager.dialog_data.get("page_recent_registered", 1)) - 1,
+    )
+
+
+async def on_recent_registered_next(
+    callback: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+) -> None:
+    await _set_page(
+        dialog_manager,
+        "page_recent_registered",
+        int(dialog_manager.dialog_data.get("page_recent_registered", 1)) + 1,
+    )
+
+
+async def on_recent_activity_prev(
+    callback: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+) -> None:
+    await _set_page(
+        dialog_manager,
+        "page_recent_activity",
+        int(dialog_manager.dialog_data.get("page_recent_activity", 1)) - 1,
+    )
+
+
+async def on_recent_activity_next(
+    callback: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+) -> None:
+    await _set_page(
+        dialog_manager,
+        "page_recent_activity",
+        int(dialog_manager.dialog_data.get("page_recent_activity", 1)) + 1,
+    )
+
+
+async def on_search_results_prev(
+    callback: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+) -> None:
+    await _set_page(
+        dialog_manager,
+        "page_search_results",
+        int(dialog_manager.dialog_data.get("page_search_results", 1)) - 1,
+    )
+
+
+async def on_search_results_next(
+    callback: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+) -> None:
+    await _set_page(
+        dialog_manager,
+        "page_search_results",
+        int(dialog_manager.dialog_data.get("page_search_results", 1)) + 1,
+    )
+
+
+async def on_blacklist_prev(
+    callback: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+) -> None:
+    await _set_page(
+        dialog_manager,
+        "page_blacklist",
+        int(dialog_manager.dialog_data.get("page_blacklist", 1)) - 1,
+    )
+
+
+async def on_blacklist_next(
+    callback: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+) -> None:
+    await _set_page(
+        dialog_manager,
+        "page_blacklist",
+        int(dialog_manager.dialog_data.get("page_blacklist", 1)) + 1,
+    )
+
+
 @inject
 async def on_user_search(
     message: Message,
@@ -34,6 +171,7 @@ async def on_user_search(
 
     found_users = await user_service.search_users(message)
     search_query = message.text.strip() if message.text else None
+    dialog_manager.dialog_data["page_search_results"] = 1
 
     if not found_users:
         logger.info(f"{log(user)} Search for '{search_query}' yielded no results")
