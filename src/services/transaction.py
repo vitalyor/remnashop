@@ -111,6 +111,12 @@ class TransactionService(BaseService):
         data = transaction.prepare_changed_data()
         data.pop("user", None)
 
+        # JSON columns expect JSON-serializable values (no Decimal / pydantic models).
+        if "plan" in data:
+            data["plan"] = transaction.plan.model_dump(mode="json")
+        if "pricing" in data:
+            data["pricing"] = transaction.pricing.model_dump(mode="json")
+
         async with self.uow:
             db_updated_transaction = await self.uow.repository.transactions.update(
                 payment_id=transaction.payment_id,
