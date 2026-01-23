@@ -32,5 +32,5 @@ site/
 *.egg-info/
 *.egg
 
-remnawave-bedolaga-telegram-bot
-docs
+remnawave-bedolaga-telegram-bot/
+docs/
