@@ -108,10 +108,13 @@ class TransactionService(BaseService):
         return transactions[0] if transactions else None
 
     async def update(self, transaction: TransactionDto) -> Optional[TransactionDto]:
+        data = transaction.prepare_changed_data()
+        data.pop("user", None)
+
         async with self.uow:
             db_updated_transaction = await self.uow.repository.transactions.update(
                 payment_id=transaction.payment_id,
-                **transaction.changed_data,
+                **data,
             )
 
         if db_updated_transaction:
