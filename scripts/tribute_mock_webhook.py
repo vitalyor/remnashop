@@ -29,8 +29,12 @@ import sys
 import uuid
 from typing import Any
 from urllib.parse import parse_qs, urlparse
+from urllib.request import Request, urlopen
 
-import httpx
+try:
+    import httpx  # type: ignore
+except Exception:  # pragma: no cover
+    httpx = None
 
 
 def _build_payload(args: argparse.Namespace) -> dict[str, Any]:
@@ -165,14 +169,30 @@ def main() -> int:
     print(f"order_id={args.order_id}")
     print(f"event={args.event} status={args.status}")
 
-    with httpx.Client(timeout=args.timeout) as client:
-        resp = client.post(url, content=body, headers=headers)
+    if httpx is not None:
+        with httpx.Client(timeout=args.timeout) as client:
+            resp = client.post(url, content=body, headers=headers)
+        status_code = resp.status_code
+        text = resp.text
+    else:
+        req = Request(url=url, data=body, headers=headers, method="POST")
+        try:
+            with urlopen(req, timeout=args.timeout) as resp:  # nosec - local tooling
+                status_code = int(getattr(resp, "status", 200))
+                text_bytes = resp.read()
+                try:
+                    text = text_bytes.decode("utf-8", errors="replace")
+                except Exception:
+                    text = ""
+        except Exception as exc:
+            print(f"Request failed: {exc}", file=sys.stderr)
+            return 2
 
-    print(f"HTTP {resp.status_code}")
-    if resp.text:
-        print(resp.text[:2000])
+    print(f"HTTP {status_code}")
+    if text:
+        print(text[:2000])
 
-    return 0 if 200 <= resp.status_code < 300 else 2
+    return 0 if 200 <= status_code < 300 else 2
 
 
 if __name__ == "__main__":
